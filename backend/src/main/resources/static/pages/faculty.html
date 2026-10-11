@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Directory & Management - EduPortal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css?v=6">
+  <link rel="stylesheet" href="../css/forms.css?v=6">
+  <link rel="stylesheet" href="../css/tables.css?v=6">
+  <link rel="stylesheet" href="../css/chatbot.css?v=3">
+  <link rel="stylesheet" href="../css/responsive.css?v=3">
+</head>
+
+<body data-page-id="faculty" data-page-title="Faculty Directory & Profiles">
+
+  <div class="app-container">
+    <aside class="sidebar" id="sidebarContainer"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar" id="topNavbarContainer"></header>
+
+      <main class="page-content">
+        <!-- Toolbar -->
+        <div class="table-toolbar" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+          <div class="input-icon-group table-search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-control" id="facultySearch" placeholder="Search faculty name, university or dept...">
+          </div>
+
+          <div style="display:flex; gap:10px;">
+            <!-- Faculty Complaint Button (Visible to Faculty & Admin) -->
+            <button class="btn btn-warning" id="fileComplaintBtn" onclick="openModal('fileComplaintModal')" style="display:none;">
+              <i class="fas fa-exclamation-triangle"></i> File Student Complaint
+            </button>
+
+            <!-- Admin Only: Add Faculty Button -->
+            <button class="btn btn-primary" id="addFacultyBtn" onclick="openModal('addFacultyModal')">
+              <i class="fas fa-user-plus"></i> Add Faculty
+            </button>
+          </div>
+        </div>
+
+        <!-- Role Authority Notice Banner if Student -->
+        <div id="studentNoticeBanner" style="display:none; margin-bottom:16px; padding:12px 16px; border-radius:8px; background:var(--primary-light); color:var(--text-primary); border:1px solid var(--border-color);">
+          <i class="fas fa-info-circle" style="color:var(--primary-color); margin-right:6px;"></i>
+          <strong>Student View:</strong> You have read-only directory access to faculty details. Account modification & faculty registration are restricted to Institutional Administrators.
+        </div>
+
+        <!-- Faculty Data Table -->
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Faculty ID</th>
+                <th>Name & Qualification</th>
+                <th>Passed Out University</th>
+                <th>Experience</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Health & Medical Info</th>
+                <th id="facActionsHeader">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="facultyTableBody">
+              <tr>
+                <td colspan="8" class="empty-state">
+                  <div class="spinner"></div> Loading faculty directory...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Complaints Log Table for Admin & Faculty -->
+        <div style="margin-top: 32px;" id="complaintsSection">
+          <div class="card" style="padding:20px;">
+            <h3 style="font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+              <span><i class="fas fa-shield-alt" style="color:var(--warning-color); margin-right:8px;"></i> Student Complaints & Incident Logs</span>
+              <span class="badge badge-warning" id="complaintsCountBadge">0 Logs</span>
+            </h3>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Student Name (ID)</th>
+                    <th>Filed By Faculty</th>
+                    <th>Category</th>
+                    <th>Severity</th>
+                    <th>Description & Action</th>
+                    <th>Status</th>
+                    <th>Action Status</th>
+                  </tr>
+                </thead>
+                <tbody id="complaintsTableBody">
+                  <tr>
+                    <td colspan="8" class="empty-state">No student complaints filed.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Faculty Modal (Admin Only) -->
+  <div class="modal-backdrop" id="addFacultyModal">
+    <div class="modal" style="max-width:540px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Faculty Member</h3>
+        <button class="modal-close" onclick="closeModal('addFacultyModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="addFacultyForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name <span class="required">*</span></label>
+              <input type="text" class="form-control" id="facName" required placeholder="e.g. Dr. Rajesh Kumar">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address <span class="required">*</span></label>
+              <input type="email" class="form-control" id="facEmail" required placeholder="faculty@college.edu">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone Number <span class="required">*</span></label>
+              <input type="text" class="form-control" id="facPhone" required placeholder="+91 9876543210">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Qualification & Degree <span class="required">*</span></label>
+              <input type="text" class="form-control" id="facQualification" required placeholder="e.g. Ph.D. in Computer Science">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Passed Out University / College <span class="required">*</span></label>
+              <input type="text" class="form-control" id="facPassedOut" required placeholder="e.g. IIT Delhi (2008)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Total Experience (Years) <span class="required">*</span></label>
+              <input type="number" class="form-control" id="facExperience" required min="0" max="50" placeholder="e.g. 15">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Department <span class="required">*</span></label>
+              <select class="form-control" id="facDept" required>
+                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Designation <span class="required">*</span></label>
+              <select class="form-control" id="facDesignation" required>
+                <option value="Professor & HOD">Professor & HOD</option>
+                <option value="Professor">Professor</option>
+                <option value="Associate Professor">Associate Professor</option>
+                <option value="Assistant Professor" selected>Assistant Professor</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Health Conditions / Diseases</label>
+              <input type="text" class="form-control" id="facMedical" placeholder="e.g. None (Healthy) or Mild Asthma">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Blood Group</label>
+              <select class="form-control" id="facBloodGroup">
+                <option value="O+ Positive">O+ Positive</option>
+                <option value="A+ Positive">A+ Positive</option>
+                <option value="B+ Positive">B+ Positive</option>
+                <option value="AB+ Positive">AB+ Positive</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addFacultyModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Faculty Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- File Student Complaint Modal (For Faculty) -->
+  <div class="modal-backdrop" id="fileComplaintModal">
+    <div class="modal" style="max-width:520px;">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-exclamation-triangle" style="color:var(--warning-color);"></i> File Complaint Against Student</h3>
+        <button class="modal-close" onclick="closeModal('fileComplaintModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="fileComplaintForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Select Student <span class="required">*</span></label>
+            <select class="form-control" id="complaintStudentSelect" required>
+              <option value="">-- Choose Student --</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Complaint Category <span class="required">*</span></label>
+              <select class="form-control" id="complaintCategory" required>
+                <option value="Low Attendance & Assignments Deficit">Low Attendance & Assignments</option>
+                <option value="Disciplinary Violation / Misbehavior">Disciplinary Misbehavior</option>
+                <option value="Academic Cheating / Plagiarism">Academic Misconduct</option>
+                <option value="Class Disruption & Unexcused Absence">Class Disruption</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Severity Level <span class="required">*</span></label>
+              <select class="form-control" id="complaintSeverity" required>
+                <option value="Low">Low (Informal Note)</option>
+                <option value="Medium" selected>Medium (Official Warning)</option>
+                <option value="High">High (Parent Meeting Required)</option>
+                <option value="Critical">Critical (Disciplinary Board)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Detailed Incident Description <span class="required">*</span></label>
+            <textarea class="form-control" id="complaintDescription" rows="3" required placeholder="Describe the incident, date, and specific student behavior..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Action Requested from Admin</label>
+            <input type="text" class="form-control" id="complaintActionRequested" placeholder="e.g. Parent call, Formal warning letter, Dean review">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('fileComplaintModal')">Cancel</button>
+          <button type="submit" class="btn btn-warning"><i class="fas fa-paper-plane"></i> Submit Complaint</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="../js/api.js?v=6"></script>
+  <script src="../js/auth.js?v=6"></script>
+  <script src="../js/utils.js?v=6"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/app.js?v=6"></script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/faculty.js?v=6"></script>
+</body>
+
+</html>

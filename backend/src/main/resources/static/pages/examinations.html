@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Examinations & Results - EduPortal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css?v=5">
+  <link rel="stylesheet" href="../css/forms.css?v=5">
+  <link rel="stylesheet" href="../css/tables.css?v=5">
+  <link rel="stylesheet" href="../css/chatbot.css?v=3">
+  <link rel="stylesheet" href="../css/responsive.css?v=3">
+</head>
+
+<body data-page-id="examinations" data-page-title="Examinations & Results">
+
+  <div class="app-container">
+    <aside class="sidebar" id="sidebarContainer"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar" id="topNavbarContainer"></header>
+
+      <main class="page-content">
+        <!-- Upcoming Examinations Table -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3 style="font-size:16px; font-weight:700; color:var(--text-primary);"><i class="fas fa-calendar-alt"
+                style="color:var(--primary-color);"></i> Exam Timetable Schedule</h3>
+            <button class="btn btn-primary btn-sm" id="scheduleExamBtn" onclick="openModal('addExamModal')"><i class="fas fa-plus"></i>
+              Schedule New Exam</button>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Exam Title</th>
+                  <th>Semester</th>
+                  <th>Subject</th>
+                  <th>Date</th>
+                  <th>Exam Type</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="examTableBody">
+                <tr>
+                  <td colspan="7" class="empty-state">
+                    <div class="spinner"></div> Loading schedule...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Student Result Cards Grid -->
+        <div>
+          <h3 style="font-size:18px; font-weight:700; margin-bottom:16px; color:var(--text-primary);"><i
+              class="fas fa-award" style="color:var(--primary-color);"></i> Published Semester Result Cards</h3>
+          <div class="quick-actions-grid" id="resultCardsContainer"
+            style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Schedule Exam Modal -->
+  <div class="modal-backdrop" id="addExamModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Schedule New Examination</h3>
+        <button class="modal-close" onclick="closeModal('addExamModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="addExamForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Exam Name <span class="required">*</span></label>
+            <input type="text" class="form-control" id="examTitle" required
+              placeholder="e.g. End-Semester Theory Exam 2026">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <input type="number" class="form-control" id="examSem" value="5" min="1" max="8">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Exam Type</label>
+              <select class="form-control" id="examTypeSelect">
+                <option value="Mid-Term">Mid-Term</option>
+                <option value="End-Term" selected>End-Term</option>
+                <option value="Practical">Practical</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Subject <span class="required">*</span></label>
+              <input type="text" class="form-control" id="examSubject" required
+                placeholder="e.g. Full Stack Java Development">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Exam Date <span class="required">*</span></label>
+              <input type="date" class="form-control" id="examDateInput" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addExamModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Schedule Exam</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="../js/api.js?v=5"></script>
+  <script src="../js/auth.js?v=5"></script>
+  <script src="../js/utils.js?v=5"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/app.js?v=5"></script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/examinations.js"></script>
+</body>
+
+</html>

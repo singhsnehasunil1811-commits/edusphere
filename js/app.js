@@ -170,10 +170,12 @@ function renderSidebar() {
             <i class="fas fa-graduation-cap logo-cap"></i>
             <i class="fas fa-star sparkle s1"></i>
             <i class="fas fa-star sparkle s2"></i>
-            <i class="fas fa-star sparkle s3"></i>
           </div>
         </div>
-        <span style="background:linear-gradient(90deg,#06b6d4,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;font-size:15px;font-weight:900;">ACADRIX</span>
+        <div style="display:flex;flex-direction:column;">
+          <span style="background:linear-gradient(90deg,#06b6d4,#8b5cf6,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;font-size:15px;font-weight:900;">EDUSPHERE</span>
+          <span style="font-size:9px;color:rgba(148,163,184,0.85);letter-spacing:1px;font-family:monospace;margin-top:2px;">APSIT INTELLIGENCE</span>
+        </div>
       </div>
     </div>
     <ul class="sidebar-menu">

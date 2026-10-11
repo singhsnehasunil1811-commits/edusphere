@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduSphere — Intelligent Student Success & Engineering Portal</title>
+  <title>EduSphere — APSIT Student Intelligent Success Portal</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
-    /* Coding Nexus Full-Page Scroll Sections */
+    /* Full-Page Smooth Scroll Sections */
     html {
       scroll-behavior: smooth;
     }
@@ -14,7 +14,7 @@
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(10, 14, 23, 0.85);
+      background: rgba(10, 14, 23, 0.88);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(51, 65, 85, 0.4);
@@ -173,44 +173,44 @@
         </div>
         <div>
           <span class="gradient-text" style="font-size:1.35rem; font-weight:800; letter-spacing:-0.02em;">EDUSPHERE</span>
-          <span style="font-size:0.75rem; color:var(--text-muted); display:block; font-family:var(--font-mono); margin-top:-2px;">APSIT STUDENT INTELLIGENCE</span>
+          <span style="font-size:0.75rem; color:var(--text-muted); display:block; font-family:var(--font-mono); margin-top:-2px;">APSIT STUDENT INTELLIGENT</span>
         </div>
       </div>
 
       <nav class="nav-links">
-        <a href="#features">Platform Features</a>
-        <a href="#simulator">Grade Simulator</a>
-        <a href="#metrics">Campus Metrics</a>
+        <a href="#features">Core Features</a>
+        <a href="#metrics">Campus Intelligence</a>
+        <a href="#syllabus">Syllabus Mapping</a>
         <a href="#architecture">Architecture</a>
       </nav>
 
       <div style="display:flex; align-items:center; gap:12px;">
         <button id="theme-toggle-btn" class="btn btn-secondary btn-icon" onclick="toggleTheme()" title="Toggle Theme" style="padding:8px 12px;">🌓</button>
-        <a href="/login.html" class="btn btn-primary" style="padding:8px 20px; font-size:0.88rem;">Sign In ➔</a>
+        <a href="login.html" class="btn btn-primary" style="padding:8px 20px; font-size:0.88rem;">Sign In ➔</a>
       </div>
     </div>
   </header>
 
-  <!-- SECTION 1: HERO SECTION -->
+  <!-- SECTION 1: HERO SCROLL SECTION -->
   <section class="section-wrap" style="padding-top:40px; padding-bottom:60px;">
     <div class="hero-banner">
       <div>
         <div class="tech-pill">
           <span class="pulse-dot"></span>
-          <span>STUDENT SUCCESS PLATFORM · LIVE ACADEMIC PORTAL</span>
+          <span>APSIT · STUDENT INTELLIGENT SYSTEM · LIVE ACADEMIC PORTAL</span>
         </div>
 
-        <h1 style="font-size:3.6rem; line-height:1.1; margin-bottom:20px; font-weight:800; letter-spacing:-0.03em;">
+        <h1 style="font-size:3.5rem; line-height:1.12; margin-bottom:20px; font-weight:800; letter-spacing:-0.03em;">
           Intelligent Academic<br>
           <span class="gradient-text">Student Success Management</span>
         </h1>
 
         <p style="font-size:1.12rem; color:var(--text-muted); margin-bottom:32px; line-height:1.65;">
-          An intelligent full-stack student management prototype designed to track academic journeys. Featuring real-time GPA What-If forecasting, credit-weighted transcript generation, 75% attendance threshold monitoring, and comprehensive campus governance.
+          A Next-Gen Full-Stack Engineering Platform for <b>A. P. Shah Institute of Technology (APSIT)</b>. Powered by Java OOP inheritance models, Spring Boot REST controllers, automated attendance shortage monitoring, live GPA analytics, and seamless faculty-student collaboration.
         </p>
 
         <div style="display:flex; gap:14px; flex-wrap:wrap;">
-          <a href="/login.html" class="btn btn-primary" style="padding:13px 26px; font-size:0.95rem;">
+          <a href="login.html" class="btn btn-primary" style="padding:13px 26px; font-size:0.95rem;">
             Launch Portal ➔
           </a>
           <a href="#features" class="btn btn-secondary" style="padding:13px 24px; font-size:0.95rem;">
@@ -225,19 +225,19 @@
           <div class="terminal-dot" style="background:#ef4444;"></div>
           <div class="terminal-dot" style="background:#f59e0b;"></div>
           <div class="terminal-dot" style="background:#10b981;"></div>
-          <span style="font-size:0.75rem; color:var(--text-muted); margin-left:8px;">edusphere-engine.sh — Active Node</span>
+          <span style="font-size:0.75rem; color:var(--text-muted); margin-left:8px;">edusphere-apsit-node — Live Runtime</span>
         </div>
-        <div style="color:#64748b; margin-bottom:8px;">// Student Success Engine Runtime</div>
-        <div style="color:#38bdf8; margin-bottom:6px;">$ curl -X GET /api/advanced/simulate-grade?targetCgpa=8.5</div>
+        <div style="color:#64748b; margin-bottom:8px;">// APSIT Student Intelligence Engine (Spring Boot + H2)</div>
+        <div style="color:#38bdf8; margin-bottom:6px;">$ curl -X GET /api/v1/dashboard/summary</div>
         <div style="color:#f8fafc; margin-bottom:12px;">{<br>
-        &nbsp;&nbsp;<span style="color:#818cf8;">"studentName"</span>: <span style="color:#34d399;">"Rahul Verma"</span>,<br>
-        &nbsp;&nbsp;<span style="color:#818cf8;">"currentCgpa"</span>: <span style="color:#f59e0b;">8.15</span>,<br>
-        &nbsp;&nbsp;<span style="color:#818cf8;">"requiredSemesterGpa"</span>: <span style="color:#f59e0b;">8.85</span>,<br>
-        &nbsp;&nbsp;<span style="color:#818cf8;">"isAchievable"</span>: <span style="color:#34d399;">true</span>,<br>
-        &nbsp;&nbsp;<span style="color:#818cf8;">"feasibilityStatus"</span>: <span style="color:#38bdf8;">"REALISTIC"</span><br>
+        &nbsp;&nbsp;<span style="color:#818cf8;">"institute"</span>: <span style="color:#34d399;">"A. P. Shah Institute of Technology"</span>,<br>
+        &nbsp;&nbsp;<span style="color:#818cf8;">"platform"</span>: <span style="color:#34d399;">"EduSphere APSIT Student Intelligent"</span>,<br>
+        &nbsp;&nbsp;<span style="color:#818cf8;">"totalStudents"</span>: <span style="color:#f59e0b;">105</span>,<br>
+        &nbsp;&nbsp;<span style="color:#818cf8;">"overallAttendance"</span>: <span style="color:#34d399;">"88.5%"</span>,<br>
+        &nbsp;&nbsp;<span style="color:#818cf8;">"averageGpa"</span>: <span style="color:#f59e0b;">3.78</span><br>
         }</div>
-        <div style="color:#10b981;">✓ 155 Attendance Logs Verified</div>
-        <div style="color:#10b981;">✓ Credit-Weighted GPA Engine Operational</div>
+        <div style="color:#10b981;">✓ Spring Boot RESTful Endpoints Connected</div>
+        <div style="color:#10b981;">✓ Attendance & Grade Evaluation Pipeline Active</div>
       </div>
     </div>
   </section>
@@ -245,65 +245,59 @@
   <!-- SECTION 2: PLATFORM CORE FEATURES -->
   <section id="features" class="section-wrap" style="border-top:1px solid rgba(51, 65, 85, 0.4);">
     <div style="text-align:center; max-width:700px; margin:0 auto 20px;">
-      <span class="badge badge-info" style="margin-bottom:12px;">ENGINEERING MODULES</span>
-      <h2 style="font-size:2.4rem; font-weight:800; letter-spacing:-0.02em;">Comprehensive Academic Tooling</h2>
+      <span class="badge badge-info" style="margin-bottom:12px;">ACADEMIC MODULES</span>
+      <h2 style="font-size:2.4rem; font-weight:800; letter-spacing:-0.02em;">Comprehensive Student Tooling</h2>
       <p style="color:var(--text-muted); font-size:1rem; margin-top:8px;">
-        Designed from ground up to replace fragmented spreadsheets with synchronized transactional integrity.
+        Everything students, teachers, and administrators need to succeed at APSIT.
       </p>
     </div>
 
     <div class="feature-grid">
       <div class="feature-card">
-        <div style="font-size:2rem; margin-bottom:14px;">🎯</div>
-        <span class="badge badge-info" style="margin-bottom:8px;">SIMULATION</span>
-        <h3 style="font-size:1.15rem; margin-bottom:8px;">What-If GPA Simulator</h3>
-        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55;">
-          Students enter target CGPA goals, and the engine calculates minimum internal marks and end-semester scores required across each subject.
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div style="font-size:2rem; margin-bottom:14px;">📄</div>
-        <span class="badge badge-active" style="margin-bottom:8px;">OPENPDF ENGINE</span>
-        <h3 style="font-size:1.15rem; margin-bottom:8px;">Official PDF Transcripts</h3>
-        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55;">
-          One-click generation of institution-branded grade transcripts, credit distributions, and verifiable academic standings.
+        <div style="font-size:2rem; margin-bottom:14px;">🎓</div>
+        <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:10px;">Student Success Directory</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+          Full student lifecycle management with roll number search, department filtering, semester sorting, and instant profile views.
         </p>
       </div>
 
       <div class="feature-card">
         <div style="font-size:2rem; margin-bottom:14px;">📊</div>
-        <span class="badge badge-info" style="margin-bottom:8px;">APACHE POI</span>
-        <h3 style="font-size:1.15rem; margin-bottom:8px;">Batch Excel Roster Ingestion</h3>
-        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55;">
-          Enables administrators to batch-import hundreds of students directly via `.xlsx` and export complete roster ledgers with formatting.
+        <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:10px;">Attendance Shortage Radar</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+          Automated 75% attendance threshold calculation. Highlights good standing vs shortage badges with recovery calculations.
         </p>
       </div>
 
       <div class="feature-card">
-        <div style="font-size:2rem; margin-bottom:14px;">⚡</div>
-        <span class="badge badge-warning" style="margin-bottom:8px;">ANALYTICS</span>
-        <h3 style="font-size:1.15rem; margin-bottom:8px;">Bulk Attendance Marker</h3>
-        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55;">
-          Single-request class attendance logging with automatic below-threshold triggers (`< 75%`) and instant recovery requirements calculation.
+        <div style="font-size:2rem; margin-bottom:14px;">📝</div>
+        <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:10px;">Automated Grade Calculator</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+          Internal (30) + External (70) examination evaluation with automated letter grade assignments (A+, A, B+, B, C, D, F).
         </p>
       </div>
 
       <div class="feature-card">
-        <div style="font-size:2rem; margin-bottom:14px;">🛡️</div>
-        <span class="badge badge-danger" style="margin-bottom:8px;">COMPLIANCE</span>
-        <h3 style="font-size:1.15rem; margin-bottom:8px;">Security Audit Ledger</h3>
-        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55;">
-          Immutable transactional audit log that captures grade overrides, attendance adjustments, user roles, and timestamps.
+        <div style="font-size:2rem; margin-bottom:14px;">📚</div>
+        <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:10px;">Curriculum & Course Manager</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+          Complete syllabus mapping covering LO1 to LO6 with credits allocation, course codes, and assigned professors.
         </p>
       </div>
 
       <div class="feature-card">
-        <div style="font-size:2rem; margin-bottom:14px;">💳</div>
-        <span class="badge badge-active" style="margin-bottom:8px;">FINANCE</span>
-        <h3 style="font-size:1.15rem; margin-bottom:8px;">Digital Fee Ledger</h3>
-        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.55;">
-          Multi-installment annual fee tracking with remaining balance computation and administrative payment receipts.
+        <div style="font-size:2rem; margin-bottom:14px;">👨‍🏫</div>
+        <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:10px;">Faculty & Department Roster</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+          Directory of professors, HODs, and academic departments across Computer Science, IT, and Electronics.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div style="font-size:2rem; margin-bottom:14px;">🤖</div>
+        <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:10px;">EduAssist Intelligent Assistant</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+          Floating AI assistant answering student queries regarding attendance rules, marks criteria, and exam timetables.
         </p>
       </div>
     </div>
@@ -311,55 +305,80 @@
 
   <!-- SECTION 3: CAMPUS METRICS -->
   <section id="metrics" class="section-wrap" style="border-top:1px solid rgba(51, 65, 85, 0.4);">
-    <div style="text-align:center; max-width:700px; margin:0 auto 30px;">
-      <span class="badge badge-active" style="margin-bottom:12px;">LIVE TELEMETRY</span>
-      <h2 style="font-size:2.4rem; font-weight:800; letter-spacing:-0.02em;">Campus Ecosystem Overview</h2>
-      <p style="color:var(--text-muted); font-size:1rem; margin-top:8px;">
-        Synchronized live data currently seeded and active in your database.
-      </p>
+    <div style="text-align:center; max-width:700px; margin:0 auto 40px;">
+      <span class="badge badge-success" style="margin-bottom:12px;">CAMPUS TELEMETRY</span>
+      <h2 style="font-size:2.4rem; font-weight:800; letter-spacing:-0.02em;">Live Academic Metrics</h2>
+      <p style="color:var(--text-muted); font-size:1rem; margin-top:8px;">Real-time metrics monitored across APSIT departments.</p>
     </div>
 
     <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;">
       <div class="metric-box">
-        <div class="metric-val" id="metric-students">20</div>
-        <div style="color:var(--text-muted); font-size:0.88rem; font-weight:600;">Enrolled Students</div>
+        <div class="metric-val">4</div>
+        <div style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:1px;">Departments</div>
       </div>
       <div class="metric-box">
-        <div class="metric-val" id="metric-attendance" style="color:#10b981;">81.3%</div>
-        <div style="color:var(--text-muted); font-size:0.88rem; font-weight:600;">Average Attendance</div>
+        <div class="metric-val">105+</div>
+        <div style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:1px;">Active Students</div>
       </div>
       <div class="metric-box">
-        <div class="metric-val" id="metric-marks" style="color:#f59e0b;">78.8%</div>
-        <div style="color:var(--text-muted); font-size:0.88rem; font-weight:600;">Average Performance</div>
+        <div class="metric-val">88.5%</div>
+        <div style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:1px;">Avg Attendance</div>
       </div>
       <div class="metric-box">
-        <div class="metric-val" id="metric-faculty" style="color:#818cf8;">5</div>
-        <div style="color:var(--text-muted); font-size:0.88rem; font-weight:600;">Academic Departments</div>
+        <div class="metric-val">3.78</div>
+        <div style="font-size:0.85rem; color:var(--text-muted); text-transform:uppercase; font-weight:700; letter-spacing:1px;">Average GPA</div>
       </div>
     </div>
   </section>
 
-  <!-- SECTION 4: CALL TO ACTION -->
-  <section class="section-wrap" style="border-top:1px solid rgba(51, 65, 85, 0.4); text-align:center;">
-    <div style="max-width:800px; margin:0 auto; padding:40px; background:rgba(15, 23, 42, 0.75); border:1px solid rgba(56, 189, 248, 0.4); border-radius:18px; box-shadow:0 20px 40px rgba(0,0,0,0.6);">
-      <h2 style="font-size:2.5rem; font-weight:800; margin-bottom:14px;">Ready to Explore EduSphere?</h2>
-      <p style="color:var(--text-muted); font-size:1.05rem; margin-bottom:28px;">
-        Log in using pre-configured demo credentials for Administrator, Faculty, or Student.
-      </p>
-      <a href="/login.html" class="btn btn-primary" style="padding:14px 32px; font-size:1.05rem;">
-        Go to Portal Sign In ➔
-      </a>
+  <!-- SECTION 4: SYLLABUS MAPPING -->
+  <section id="syllabus" class="section-wrap" style="border-top:1px solid rgba(51, 65, 85, 0.4);">
+    <div style="text-align:center; max-width:700px; margin:0 auto 30px;">
+      <span class="badge badge-warning" style="margin-bottom:12px;">FSJP SYLLABUS ALIGNMENT</span>
+      <h2 style="font-size:2.4rem; font-weight:800; letter-spacing:-0.02em;">Learning Outcomes (LO1 — LO6)</h2>
+      <p style="color:var(--text-muted); font-size:1rem; margin-top:8px;">Demonstrated architectural concepts in the codebase.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;">
+      <div class="feature-card">
+        <h4 style="color:#38bdf8; font-family:var(--font-mono); margin-bottom:8px;">LO 1 · OOP Fundamentals</h4>
+        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5;">Classes, Constructor Overloading, and Data Encapsulation in Person and Student entities.</p>
+      </div>
+      <div class="feature-card">
+        <h4 style="color:#38bdf8; font-family:var(--font-mono); margin-bottom:8px;">LO 2 · Inheritance & Polymorphism</h4>
+        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5;">Hierarchical inheritance (`Student extends Person`), abstract methods, and runtime polymorphism.</p>
+      </div>
+      <div class="feature-card">
+        <h4 style="color:#38bdf8; font-family:var(--font-mono); margin-bottom:8px;">LO 3 · Persistence & JDBC/JPA</h4>
+        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5;">Spring Data JPA repositories, entity mapping, and automated H2 schema initialization.</p>
+      </div>
+      <div class="feature-card">
+        <h4 style="color:#38bdf8; font-family:var(--font-mono); margin-bottom:8px;">LO 4 · Exception Handling</h4>
+        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5;">GlobalExceptionHandler with structured ErrorDetails DTOs and clean HTTP response codes.</p>
+      </div>
+      <div class="feature-card">
+        <h4 style="color:#38bdf8; font-family:var(--font-mono); margin-bottom:8px;">LO 5 · Collection Framework</h4>
+        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5;">Streams, sorting, filtering, and pagination over in-memory student and marks collections.</p>
+      </div>
+      <div class="feature-card">
+        <h4 style="color:#38bdf8; font-family:var(--font-mono); margin-bottom:8px;">LO 6 · Spring Boot REST Controllers</h4>
+        <p style="color:var(--text-muted); font-size:0.88rem; line-height:1.5;">RESTful endpoints handling GET, POST, PUT, DELETE with CORS configuration.</p>
+      </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer style="border-top:1px solid rgba(51, 65, 85, 0.4); padding:30px 24px; text-align:center; font-size:0.85rem; color:var(--text-muted); font-family:var(--font-mono);">
-    EDUSPHERE · INTELLIGENT STUDENT SUCCESS MANAGEMENT SYSTEM · APSIT
+  <!-- CTA FOOTER -->
+  <footer style="border-top:1px solid rgba(51, 65, 85, 0.4); padding:60px 24px; text-align:center; background:rgba(6,9,17,0.8);">
+    <div style="max-width:800px; margin:0 auto;">
+      <h2 style="font-size:2rem; font-weight:800; margin-bottom:14px;">Ready to Explore EduSphere?</h2>
+      <p style="color:var(--text-muted); margin-bottom:28px;">Log in as Administrator, Faculty, or Student to view your academic tools.</p>
+      <a href="login.html" class="btn btn-primary" style="padding:14px 32px; font-size:1rem;">Access Portal Now ➔</a>
+      <div style="margin-top:40px; font-size:0.8rem; color:var(--text-muted); font-family:var(--font-mono);">
+        EDUSPHERE APSIT STUDENT INTELLIGENT · A. P. SHAH INSTITUTE OF TECHNOLOGY · 2026
+      </div>
+    </div>
   </footer>
 
-  <script src="js/api.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/dashboard.js"></script>
   <script src="js/cursor.js"></script>
   <script>
     function toggleTheme() {
@@ -371,7 +390,66 @@
     const savedTheme = localStorage.getItem('student360_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
-    Dashboard.initParticles();
+    // Particle Background Animation
+    (function initBackgroundCanvas() {
+      const canvas = document.getElementById('bg-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth;
+      let h = canvas.height = window.innerHeight;
+
+      const particles = [];
+      const count = Math.min(65, Math.floor(w / 20));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45,
+          radius: Math.random() * 1.6 + 0.6
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.45)';
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0) p.x = w;
+          if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h;
+          if (p.y > h) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              ctx.strokeStyle = `rgba(56, 189, 248, ${0.15 * (1 - dist / 120)})`;
+              ctx.lineWidth = 0.8;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+
+      window.addEventListener('resize', () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
+    })();
   </script>
 </body>
 </html>

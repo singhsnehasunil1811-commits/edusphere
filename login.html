@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduSphere — Portal Sign In</title>
+  <title>EduSphere — APSIT Student Intelligent Portal Sign In</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
     .login-container {
@@ -17,18 +17,21 @@
     }
     .login-box {
       width: 100%;
-      max-width: 460px;
-      padding: 40px;
+      max-width: 480px;
+      padding: 42px;
+      background: rgba(15, 23, 42, 0.88);
       border: 1px solid rgba(56, 189, 248, 0.4);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
-      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      border-radius: 18px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       position: relative;
     }
     .demo-chip {
       background: rgba(30, 41, 59, 0.85);
       border: 1px solid rgba(71, 85, 105, 0.7);
       color: var(--text);
-      padding: 7px 14px;
+      padding: 8px 14px;
       border-radius: 8px;
       font-size: 0.8rem;
       cursor: pointer;
@@ -38,7 +41,7 @@
     .demo-chip:hover {
       border-color: #38bdf8;
       color: #38bdf8;
-      background: rgba(56, 189, 248, 0.12);
+      background: rgba(56, 189, 248, 0.14);
       transform: translateY(-1px);
     }
     .back-home {
@@ -54,47 +57,94 @@
     .back-home:hover {
       color: #38bdf8;
     }
+    .role-tabs {
+      display: flex;
+      gap: 8px;
+      background: rgba(10, 14, 23, 0.6);
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(51, 65, 85, 0.5);
+    }
+    .role-tab-btn {
+      flex: 1;
+      padding: 9px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    .role-tab-btn.active {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+    }
+    .toast-pill {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid #10b981;
+      color: #34d399;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
   </style>
 </head>
 <body>
   <canvas id="bg-canvas"></canvas>
 
   <div class="login-container">
-    <div class="login-box glass">
-      <a href="/index.html" class="back-home">← Back to Overview</a>
+    <div class="login-box">
+      <a href="index.html" class="back-home">← Back to Overview</a>
 
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-        <span class="badge badge-info">AUTHENTICATION GATEWAY</span>
+        <span class="badge badge-info">APSIT AUTH GATEWAY</span>
         <button id="theme-toggle-btn" class="btn btn-secondary btn-icon btn-sm" onclick="toggleTheme()" title="Toggle Theme">🌓</button>
       </div>
 
-      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
-        <div style="width:42px; height:42px; border-radius:10px; background:linear-gradient(135deg, #0284c7, #4f46e5); display:flex; align-items:center; justify-content:center; font-size:1.3rem; box-shadow:0 0 15px rgba(56, 189, 248, 0.35);">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <div style="width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg, #0284c7, #4f46e5); display:flex; align-items:center; justify-content:center; font-size:1.4rem; box-shadow:0 0 16px rgba(56, 189, 248, 0.35);">
           ⚡
         </div>
         <div>
-          <h2 style="font-size:1.6rem; font-weight:800; line-height:1.2;">Sign In to Portal</h2>
-          <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">EDUSPHERE ACADEMIC SYSTEM</span>
+          <h2 style="font-size:1.6rem; font-weight:800; line-height:1.2; letter-spacing:-0.02em;">Portal Sign In</h2>
+          <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono); letter-spacing:0.5px;">EDUSPHERE APSIT STUDENT INTELLIGENT</span>
         </div>
       </div>
 
-      <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:20px;">Access your institutional dashboard with your credentials</p>
+      <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:20px;">
+        A. P. Shah Institute of Technology — Access your academic dashboard
+      </p>
 
-      <div id="login-error-msg" style="color:var(--danger); font-size:0.85rem; margin-bottom:14px; display:none; padding:10px; border:1px solid rgba(239,68,68,0.3); border-radius:8px; background:rgba(239,68,68,0.1);"></div>
+      <!-- Role Switcher Tabs -->
+      <div class="role-tabs">
+        <button type="button" class="role-tab-btn active" id="tab-admin" onclick="selectRole('Admin')">Admin</button>
+        <button type="button" class="role-tab-btn" id="tab-faculty" onclick="selectRole('Faculty')">Faculty</button>
+        <button type="button" class="role-tab-btn" id="tab-student" onclick="selectRole('Student')">Student</button>
+      </div>
+
+      <div id="login-error-msg" style="color:#ef4444; font-size:0.85rem; margin-bottom:14px; display:none; padding:10px; border:1px solid rgba(239,68,68,0.3); border-radius:8px; background:rgba(239,68,68,0.1);"></div>
 
       <form id="login-form" onsubmit="handleLogin(event)">
-        <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label" style="font-size:0.82rem; font-weight:600;">System Access Role *</label>
-          <select id="login-role" class="form-select" required>
-            <option value="ADMIN">Institutional Administrator</option>
-            <option value="TEACHER">Faculty / Department Teacher</option>
-            <option value="STUDENT">Enrolled Student</option>
-          </select>
-        </div>
+        <input type="hidden" id="login-role" value="Admin">
 
         <div class="form-group" style="margin-bottom:14px;">
-          <label class="form-label" style="font-size:0.82rem; font-weight:600;">Institutional Email *</label>
-          <input type="email" id="login-email" class="form-control" placeholder="name@student360.com" required value="admin@student360.com" style="font-family:var(--font-mono); font-size:0.88rem;">
+          <label class="form-label" style="font-size:0.82rem; font-weight:600;">Institutional Email or Username *</label>
+          <input type="text" id="login-email" class="form-control" placeholder="admin@student360.com" required value="admin@student360.com" style="font-family:var(--font-mono); font-size:0.88rem;">
         </div>
 
         <div class="form-group" style="margin-bottom:18px;">
@@ -113,9 +163,9 @@
       <div style="margin-top:24px; padding-top:18px; border-top:1px solid rgba(51, 65, 85, 0.5);">
         <div style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700; font-family:var(--font-mono); margin-bottom:10px;">One-Click Demo Credentials:</div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button type="button" class="demo-chip" onclick="fillDemo('admin@student360.com','admin123','ADMIN')">⚡ Admin</button>
-          <button type="button" class="demo-chip" onclick="fillDemo('teacher@student360.com','teacher123','TEACHER')">👩‍🏫 Faculty</button>
-          <button type="button" class="demo-chip" onclick="fillDemo('student@student360.com','student123','STUDENT')">🎓 Student</button>
+          <button type="button" class="demo-chip" onclick="fillDemo('admin@student360.com','admin123','Admin')">⚡ Admin</button>
+          <button type="button" class="demo-chip" onclick="fillDemo('teacher@student360.com','teacher123','Faculty')">👩‍🏫 Faculty</button>
+          <button type="button" class="demo-chip" onclick="fillDemo('student@student360.com','student123','Student')">🎓 Student</button>
         </div>
       </div>
     </div>
@@ -124,7 +174,6 @@
   <script src="js/api.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/cursor.js"></script>
-  <script src="js/dashboard.js"></script>
   <script>
     function toggleTheme() {
       const current = document.documentElement.getAttribute('data-theme');
@@ -135,18 +184,89 @@
     const savedTheme = localStorage.getItem('student360_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
-    Dashboard.initParticles();
+    // Particle background animation
+    (function initBackgroundCanvas() {
+      const canvas = document.getElementById('bg-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth;
+      let h = canvas.height = window.innerHeight;
 
-    Auth.checkSession().then(user => {
-      if (user) {
-        window.location.href = '/app.html';
+      const particles = [];
+      const count = Math.min(50, Math.floor(w / 25));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          radius: Math.random() * 1.5 + 0.5
+        });
       }
-    });
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.45)';
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0) p.x = w;
+          if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h;
+          if (p.y > h) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 110) {
+              ctx.strokeStyle = `rgba(56, 189, 248, ${0.12 * (1 - dist / 110)})`;
+              ctx.lineWidth = 0.8;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+      window.addEventListener('resize', () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
+    })();
+
+    // Role Tab Switcher
+    function selectRole(role) {
+      document.getElementById('login-role').value = role;
+      document.getElementById('tab-admin').classList.toggle('active', role === 'Admin');
+      document.getElementById('tab-faculty').classList.toggle('active', role === 'Faculty');
+      document.getElementById('tab-student').classList.toggle('active', role === 'Student');
+
+      if (role === 'Admin') {
+        document.getElementById('login-email').value = 'admin@student360.com';
+        document.getElementById('login-password').value = 'admin123';
+      } else if (role === 'Faculty') {
+        document.getElementById('login-email').value = 'teacher@student360.com';
+        document.getElementById('login-password').value = 'teacher123';
+      } else if (role === 'Student') {
+        document.getElementById('login-email').value = 'student@student360.com';
+        document.getElementById('login-password').value = 'student123';
+      }
+    }
 
     function fillDemo(email, pass, role) {
+      selectRole(role);
       document.getElementById('login-email').value = email;
       document.getElementById('login-password').value = pass;
-      document.getElementById('login-role').value = role;
     }
 
     function togglePasswordVisibility() {
@@ -154,6 +274,7 @@
       pass.type = pass.type === 'password' ? 'text' : 'password';
     }
 
+    // Handle Authentication & Redirect to Friend's Dashboard
     async function handleLogin(e) {
       e.preventDefault();
       const errEl = document.getElementById('login-error-msg');
@@ -165,16 +286,28 @@
       const role = document.getElementById('login-role').value;
 
       btn.disabled = true;
-      btn.textContent = 'Verifying credentials with EduSphere...';
+      btn.textContent = 'Authenticating with EduSphere...';
 
       try {
-        await Auth.login(email, password, role);
-        API.toast('Welcome back! Launching dashboard...', 'success');
-        setTimeout(() => {
-          window.location.href = '/app.html';
-        }, 500);
+        const result = await auth.login(email, password, role);
+        if (result && result.success) {
+          // Toast notification
+          const toast = document.createElement('div');
+          toast.className = 'toast-pill';
+          toast.innerHTML = `✓ Welcome, ${result.user.name || result.user.email}! Launching Dashboard...`;
+          document.body.appendChild(toast);
+
+          setTimeout(() => {
+            window.location.href = 'pages/dashboard.html';
+          }, 600);
+        } else {
+          errEl.textContent = result && result.message ? result.message : 'Invalid credentials. Please verify your role and password.';
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Authenticate & Launch Dashboard ➔';
+        }
       } catch (err) {
-        errEl.textContent = err.message || 'Authentication failed. Please check your credentials.';
+        errEl.textContent = err.message || 'Login failed. Please check credentials.';
         errEl.style.display = 'block';
         btn.disabled = false;
         btn.textContent = 'Authenticate & Launch Dashboard ➔';

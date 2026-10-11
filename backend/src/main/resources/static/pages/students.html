@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Management - EduPortal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css?v=5">
+  <link rel="stylesheet" href="../css/forms.css?v=5">
+  <link rel="stylesheet" href="../css/tables.css?v=5">
+  <link rel="stylesheet" href="../css/chatbot.css?v=3">
+  <link rel="stylesheet" href="../css/responsive.css?v=3">
+</head>
+
+<body data-page-id="students" data-page-title="Student Management">
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebarContainer"></aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <header class="top-navbar" id="topNavbarContainer"></header>
+
+      <main class="page-content">
+        <!-- Table Toolbar & Action Controls -->
+        <div class="table-toolbar">
+          <div class="input-icon-group table-search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-control" id="studentSearchInput"
+              placeholder="Search by name, roll no, ID...">
+          </div>
+
+          <div class="table-filters">
+            <select class="form-control" id="deptFilterSelect" style="width: auto;">
+              <option value="ALL">All Departments</option>
+              <option value="Computer Science & Engineering">CSE</option>
+              <option value="Information Technology">IT</option>
+              <option value="Electronics & Communication">ECE</option>
+              <option value="Mechanical Engineering">Mechanical</option>
+            </select>
+
+            <select class="form-control" id="yearFilterSelect" style="width: auto;">
+              <option value="ALL">All Years</option>
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+
+            <button class="btn btn-primary" id="addStudentBtn" onclick="openModal('addStudentModal')">
+              <i class="fas fa-user-plus"></i> Add Student
+            </button>
+          </div>
+        </div>
+
+        <!-- Student Data Table -->
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Roll Number</th>
+                <th>Department</th>
+                <th>Course</th>
+                <th>Year</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTableBody">
+              <tr>
+                <td colspan="10" class="empty-state">
+                  <div class="spinner"></div> Loading students...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination Bar -->
+          <div class="table-pagination">
+            <div class="pagination-info" id="paginationInfo">Showing 0 of 0 students</div>
+            <div class="pagination-controls" id="paginationControls"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Student Modal -->
+  <div class="modal-backdrop" id="addStudentModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Student</h3>
+        <button class="modal-close" onclick="closeModal('addStudentModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="addStudentForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name <span class="required">*</span></label>
+              <input type="text" class="form-control" id="addName" required placeholder="e.g. Aarav Sharma">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Roll Number <span class="required">*</span></label>
+              <input type="text" class="form-control" id="addRollNo" required placeholder="e.g. 21CS001">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email Address <span class="required">*</span></label>
+              <input type="email" class="form-control" id="addEmail" required placeholder="student@college.edu">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number <span class="required">*</span></label>
+              <input type="text" class="form-control" id="addPhone" required placeholder="+91 9876543210">
+            </div>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select class="form-control" id="addGender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" id="addDob">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Admission Date</label>
+              <input type="date" class="form-control" id="addAdmissionDate">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Department <span class="required">*</span></label>
+              <select class="form-control" id="addDepartment" required>
+                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Course <span class="required">*</span></label>
+              <input type="text" class="form-control" id="addCourse" required placeholder="e.g. B.Tech CSE">
+            </div>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">Year <span class="required">*</span></label>
+              <select class="form-control" id="addYear" required>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year" selected>3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <input type="number" class="form-control" id="addSemester" min="1" max="8" value="5">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Division</label>
+              <input type="text" class="form-control" id="addDivision" value="A">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <textarea class="form-control" id="addAddress" rows="2" placeholder="Residential address..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addStudentModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Student Modal -->
+  <div class="modal-backdrop" id="editStudentModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Student Details</h3>
+        <button class="modal-close" onclick="closeModal('editStudentModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="editStudentForm">
+        <input type="hidden" id="editStudentId">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name <span class="required">*</span></label>
+              <input type="text" class="form-control" id="editName" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Roll Number <span class="required">*</span></label>
+              <input type="text" class="form-control" id="editRollNo" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email Address <span class="required">*</span></label>
+              <input type="email" class="form-control" id="editEmail" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-control" id="editPhone">
+            </div>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select class="form-control" id="editGender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" id="editDob">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Division</label>
+              <input type="text" class="form-control" id="editDivision">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <select class="form-control" id="editDepartment">
+                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Course</label>
+              <input type="text" class="form-control" id="editCourse">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Year</label>
+              <select class="form-control" id="editYear">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <input type="number" class="form-control" id="editSemester">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <textarea class="form-control" id="editAddress" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('editStudentModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="../js/api.js?v=5"></script>
+  <script src="../js/auth.js?v=5"></script>
+  <script src="../js/utils.js?v=5"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/app.js?v=5"></script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/students.js"></script>
+</body>
+
+</html>
