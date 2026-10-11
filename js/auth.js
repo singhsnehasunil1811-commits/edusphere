@@ -8,10 +8,7 @@ const auth = {
 
   /* ─── Credentials (demo / mock) ─────────────────────────── */
   _credentials: [
-    // Built-in demo accounts (EduSphere APSIT & EduPortal)
-    { username: 'admin@student360.com', email: 'admin@student360.com', password: 'admin123', role: 'Admin', name: 'System Administrator', status: 'approved' },
-    { username: 'teacher@student360.com', email: 'teacher@student360.com', password: 'teacher123', role: 'Faculty', name: 'Dr. Rajesh Kumar', status: 'approved' },
-    { username: 'student@student360.com', email: 'student@student360.com', password: 'student123', role: 'Student', name: 'Aarav Sharma', status: 'approved' },
+    // Built-in demo accounts
     { username: 'admin@college.edu.in', email: 'admin@college.edu.in', password: 'admin123', role: 'Admin',    name: 'Dr. Administrator',  status: 'approved' },
     { username: 'admin@college.edu',    email: 'admin@college.edu',    password: 'admin123', role: 'Admin',    name: 'Dr. Administrator',  status: 'approved' },
     { username: 'admin',                email: 'admin@college.edu.in', password: 'admin123', role: 'Admin',    name: 'Dr. Administrator',  status: 'approved' },
@@ -38,7 +35,7 @@ const auth = {
         method: 'POST',
         body: JSON.stringify({ username, password, role })
       });
-      if (response && response.token) {
+      if (response.token) {
         this._saveSession(response.user, response.token);
         return { success: true, user: response.user };
       }
@@ -69,11 +66,9 @@ const auth = {
       return { success: false, message: 'Invalid email/username or password. Please try again.' };
     }
 
-    // Normalize roles (e.g. TEACHER -> Faculty)
-    let reqRole = (role || '').trim();
-    if (reqRole.toUpperCase() === 'TEACHER') reqRole = 'Faculty';
-    if (userRecord.role.toLowerCase() !== reqRole.toLowerCase() && reqRole !== '') {
-      return { success: false, message: `This account is registered as ${userRecord.role}. Please select the "${userRecord.role}" role.` };
+    // Now check role
+    if (userRecord.role !== role) {
+      return { success: false, message: `This email is registered as a ${userRecord.role}. Please select the "${userRecord.role}" role tab to log in.` };
     }
 
     // Now check password
