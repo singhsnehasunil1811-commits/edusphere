@@ -163,7 +163,7 @@ function renderSidebar() {
       <div class="brand-logo">
         <div class="custom-logo-container">
           <div class="logo-core">
-            <div class="logo-a">A</div>
+            <div class="logo-a">E</div>
             <div class="orbit-ring ring-1"></div>
             <div class="orbit-ring ring-2"></div>
             <div class="orbit-ring ring-3"></div>
