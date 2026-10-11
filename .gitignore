@@ -1,3 +1,15 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Production builds
+dist/
+build/
+
+# Environment
+.env
+.env.local
+
 # Python
 __pycache__/
 *.py[cod]
