@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STUDENT360 — Dashboard & Academic Intelligence</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Collapsible Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-title">
+          <div class="brand-icon">🎓</div>
+          <span>STUDENT360</span>
+        </div>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="toggleSidebar()" title="Collapse Sidebar">☰</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="nav-link active" data-role="ADMIN,TEACHER" onclick="navigate('dashboard')">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+
+        <a class="nav-link" data-role="ADMIN,TEACHER" onclick="navigate('students')">
+          <span class="nav-icon">👥</span>
+          <span class="nav-text">Students Directory</span>
+        </a>
+
+        <a class="nav-link" data-role="STUDENT" onclick="navigate('my-profile')">
+          <span class="nav-icon">👤</span>
+          <span class="nav-text">My Profile</span>
+        </a>
+
+        <a class="nav-link" data-role="TEACHER,STUDENT" onclick="navigate('attendance')">
+          <span class="nav-icon">📅</span>
+          <span class="nav-text">Attendance</span>
+        </a>
+
+        <a class="nav-link" data-role="TEACHER,STUDENT" onclick="navigate('marks')">
+          <span class="nav-icon">🏆</span>
+          <span class="nav-text">Marks & Grades</span>
+        </a>
+
+        <a class="nav-link" data-role="TEACHER,STUDENT" onclick="navigate('assignments')">
+          <span class="nav-icon">📝</span>
+          <span class="nav-text">Assignments</span>
+        </a>
+
+        <a class="nav-link" data-role="ADMIN,STUDENT" onclick="navigate('fees')">
+          <span class="nav-icon">💳</span>
+          <span class="nav-text">Fee Management</span>
+        </a>
+
+        <a class="nav-link" data-role="ADMIN,TEACHER,STUDENT" onclick="navigate('notices')">
+          <span class="nav-icon">📢</span>
+          <span class="nav-text">Notices</span>
+        </a>
+
+        <a class="nav-link" data-role="ADMIN,TEACHER,STUDENT" onclick="navigate('timetable')">
+          <span class="nav-icon">⏰</span>
+          <span class="nav-text">Timetable</span>
+        </a>
+
+        <a class="nav-link" data-role="STUDENT" onclick="navigate('simulator')">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-text">Grade Simulator</span>
+        </a>
+
+        <a class="nav-link" data-role="ADMIN" onclick="navigate('audit-logs')">
+          <span class="nav-icon">🛡️</span>
+          <span class="nav-text">Security Audit</span>
+        </a>
+
+        <a class="nav-link" data-role="ADMIN" onclick="navigate('users')">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-text">User Accounts</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div id="user-avatar" class="user-avatar">U</div>
+        <div class="user-info">
+          <div id="user-name" class="user-name">Loading...</div>
+          <div id="user-role" class="user-role">Role</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn btn-secondary btn-icon" onclick="toggleSidebar()" style="display:none;" id="mobile-menu-btn">☰</button>
+          <h2 id="view-title" style="font-size:1.35rem; margin:0;">Dashboard Overview</h2>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-secondary btn-icon" onclick="toggleTheme()" title="Toggle Light/Dark Theme">🌓</button>
+          <button class="btn btn-danger btn-sm" onclick="Auth.logout()">Sign Out ➔</button>
+        </div>
+      </header>
+
+      <!-- View Container Body -->
+      <main class="content-body">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-dashboard">
+          <div class="stats-grid">
+            <div class="stat-card glass tilt-card">
+              <div class="stat-icon-wrap" style="color:var(--primary)">👥</div>
+              <div class="stat-content">
+                <div id="stat-total-students" class="stat-number">0</div>
+                <div class="stat-label">Total Students</div>
+              </div>
+            </div>
+
+            <div class="stat-card glass tilt-card">
+              <div class="stat-icon-wrap" style="color:var(--secondary)">👨‍🏫</div>
+              <div class="stat-content">
+                <div id="stat-total-teachers" class="stat-number">0</div>
+                <div class="stat-label">Faculty Staff</div>
+              </div>
+            </div>
+
+            <div class="stat-card glass tilt-card">
+              <div class="stat-icon-wrap" style="color:#10b981">📈</div>
+              <div class="stat-content">
+                <div id="stat-avg-attendance" class="stat-number">0%</div>
+                <div class="stat-label">Avg Attendance</div>
+              </div>
+            </div>
+
+            <div class="stat-card glass tilt-card" data-role="ADMIN">
+              <div class="stat-icon-wrap" style="color:#f59e0b">💳</div>
+              <div class="stat-content">
+                <div id="stat-pending-fees" class="stat-number">₹0</div>
+                <div class="stat-label">Pending Fees</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="charts-grid">
+            <div class="chart-card glass">
+              <div class="chart-header">
+                <h3>Students By Department</h3>
+                <span class="badge badge-info">Live Enrollment</span>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="chart-departments"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card glass">
+              <div class="chart-header">
+                <h3>Academic Performance Distribution</h3>
+                <span class="badge badge-active">Grade Analytics</span>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="chart-grades"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lower Row: Attendance Gauge + Recent Notices -->
+          <div class="charts-grid">
+            <div class="chart-card glass">
+              <div class="chart-header">
+                <h3>Attendance Health</h3>
+                <span class="badge badge-warning">Campus Overview</span>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="chart-attendance-gauge"></canvas>
+              </div>
+            </div>
+
+            <div class="glass" style="padding:24px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                <h3>Recent Circulars & Notices</h3>
+                <a href="javascript:void(0)" onclick="navigate('notices')" style="color:var(--secondary); font-size:0.85rem; text-decoration:none;">View All ➔</a>
+              </div>
+              <div id="recent-notices-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. STUDENTS VIEW -->
+        <section id="view-students" style="display:none;">
+          <div class="glass table-card">
+            <div class="table-header-controls">
+              <div class="table-filter-group">
+                <input type="text" id="student-search" class="form-control" placeholder="Search by name, roll, code..." style="width:240px;" oninput="Students.loadStudents(0)">
+                <select id="student-filter-dept" class="form-select" style="width:180px;" onchange="Students.loadStudents(0)"></select>
+                <select id="student-filter-course" class="form-select" style="width:160px;" onchange="Students.loadStudents(0)"></select>
+                <select id="student-filter-status" class="form-select" style="width:130px;" onchange="Students.loadStudents(0)">
+                  <option value="">All Status</option>
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="INACTIVE">INACTIVE</option>
+                </select>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn btn-secondary" onclick="window.open('/api/advanced/export/students-excel', '_blank')">📥 Export Excel</button>
+                <button class="btn btn-secondary" data-role="ADMIN" onclick="document.getElementById('excel-file-input').click()">📤 Import Excel</button>
+                <input type="file" id="excel-file-input" style="display:none;" accept=".xlsx,.xls" onchange="uploadExcelRoster(this)">
+                <div data-role="ADMIN">
+                  <button class="btn btn-primary" onclick="Students.openAddModal()">+ Register Student</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Roll / Code</th>
+                    <th>Full Name & Email</th>
+                    <th>Department</th>
+                    <th>Course</th>
+                    <th>Year/Sem</th>
+                    <th>Status</th>
+                    <th style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="students-table-body"></tbody>
+              </table>
+            </div>
+
+            <div class="pagination-wrap">
+              <div id="students-page-info" style="font-size:0.85rem; color:var(--text-muted);"></div>
+              <div id="students-page-controls" class="pagination-controls"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. MY PROFILE VIEW (For Students) -->
+        <section id="view-my-profile" style="display:none;">
+          <div id="my-profile-container"></div>
+        </section>
+
+        <!-- 4. ATTENDANCE VIEW -->
+        <section id="view-attendance" style="display:none;">
+          <div id="attendance-teacher-view" data-role="ADMIN,TEACHER">
+            <div class="glass table-card">
+              <div class="table-header-controls">
+                <div class="table-filter-group">
+                  <select id="attendance-subject-select" class="form-select" style="width:280px;" onchange="Attendance.loadClassRoster()"></select>
+                  <input type="date" id="attendance-date" class="form-control" style="width:180px;" onchange="Attendance.loadClassRoster()">
+                </div>
+                <div style="display:flex; gap:10px;">
+                  <button class="btn btn-secondary btn-sm" onclick="Attendance.markAll('PRESENT')">All Present</button>
+                  <button class="btn btn-secondary btn-sm" onclick="Attendance.markAll('ABSENT')">All Absent</button>
+                  <button class="btn btn-primary btn-sm" onclick="Attendance.saveBulkAttendance()">💾 Save Attendance</button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width:50px;">#</th>
+                      <th style="width:140px;">Roll No</th>
+                      <th>Student Name</th>
+                      <th>Status & Remarks</th>
+                    </tr>
+                  </thead>
+                  <tbody id="attendance-roster-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="attendance-student-view" data-role="STUDENT">
+            <div id="my-attendance-summary"></div>
+          </div>
+        </section>
+
+        <!-- 5. MARKS VIEW -->
+        <section id="view-marks" style="display:none;">
+          <div id="marks-teacher-view" data-role="ADMIN,TEACHER">
+            <div class="glass table-card">
+              <div class="table-header-controls">
+                <div class="table-filter-group">
+                  <select id="marks-filter-subject" class="form-select" style="width:280px;" onchange="Marks.loadMarksList()"></select>
+                </div>
+                <button class="btn btn-primary" onclick="Marks.openAddModal()">+ Enter / Update Marks</button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Roll No</th>
+                      <th>Student Name</th>
+                      <th>Subject</th>
+                      <th>Internal (20)</th>
+                      <th>Assign (20)</th>
+                      <th>Midterm (30)</th>
+                      <th>Endsem (30)</th>
+                      <th>Total & Grade</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="marks-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="marks-student-view" data-role="STUDENT">
+            <div id="my-marks-container"></div>
+          </div>
+        </section>
+
+        <!-- 6. ASSIGNMENTS VIEW -->
+        <section id="view-assignments" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>Academic Coursework & Assignments</h3>
+            <div data-role="ADMIN,TEACHER">
+              <button class="btn btn-primary" onclick="Assignments.openAddModal()">+ Post New Assignment</button>
+            </div>
+          </div>
+          <div id="assignments-cards-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;"></div>
+        </section>
+
+        <!-- 7. FEES VIEW -->
+        <section id="view-fees" style="display:none;">
+          <div id="fees-admin-view" data-role="ADMIN">
+            <div class="glass table-card">
+              <div class="table-header-controls">
+                <h3>Institutional Fee Ledger</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Roll No</th>
+                      <th>Student Name</th>
+                      <th>Year</th>
+                      <th>Total Fees</th>
+                      <th>Paid Amount</th>
+                      <th>Remaining</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="fees-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="fees-student-view" data-role="STUDENT">
+            <div id="my-fees-container"></div>
+          </div>
+        </section>
+
+        <!-- 8. NOTICES VIEW -->
+        <section id="view-notices" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>Campus Circulars & Announcements</h3>
+            <div data-role="ADMIN,TEACHER">
+              <button class="btn btn-primary" onclick="Notices.openAddModal()">+ Publish Notice</button>
+            </div>
+          </div>
+          <div id="notices-cards-container"></div>
+        </section>
+
+        <!-- 9. TIMETABLE VIEW -->
+        <section id="view-timetable" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>Weekly Lecture Schedule</h3>
+            <div data-role="ADMIN">
+              <button class="btn btn-primary" onclick="Timetable.openAddModal()">+ Add Schedule Slot</button>
+            </div>
+          </div>
+          <div class="timetable-grid">
+            <div class="day-column">
+              <div class="day-header">MONDAY</div>
+              <div id="tt-col-monday" class="day-slots"></div>
+            </div>
+            <div class="day-column">
+              <div class="day-header">TUESDAY</div>
+              <div id="tt-col-tuesday" class="day-slots"></div>
+            </div>
+            <div class="day-column">
+              <div class="day-header">WEDNESDAY</div>
+              <div id="tt-col-wednesday" class="day-slots"></div>
+            </div>
+            <div class="day-column">
+              <div class="day-header">THURSDAY</div>
+              <div id="tt-col-thursday" class="day-slots"></div>
+            </div>
+            <div class="day-column">
+              <div class="day-header">FRIDAY</div>
+              <div id="tt-col-friday" class="day-slots"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10. USER ACCOUNTS VIEW (ADMIN) -->
+        <section id="view-users" style="display:none;">
+          <div class="glass table-card">
+            <div class="table-header-controls">
+              <div class="table-filter-group">
+                <select id="user-filter-role" class="form-select" style="width:180px;" onchange="Users.loadUsers()">
+                  <option value="">All Roles</option>
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="TEACHER">TEACHER</option>
+                  <option value="STUDENT">STUDENT</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="Users.openAddModal()">+ Create User</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Account Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11. GRADE SIMULATOR VIEW -->
+        <section id="view-simulator" style="display:none;">
+          <div class="glass" style="padding:24px; margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+              <div>
+                <h2>🎯 Grade Goal & GPA Simulator</h2>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px;">
+                  Simulate future academic standing and compute required end-semester exam marks to hit your dream CGPA.
+                </p>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <label style="font-weight:600; font-size:0.9rem;">Target CGPA:</label>
+                <input type="number" id="sim-target-input" class="form-control" style="width:100px;" step="0.1" min="0" max="10" value="8.5">
+                <button class="btn btn-primary" onclick="runGradeSimulation()">Run Simulation</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="sim-results-container"></div>
+        </section>
+
+        <!-- 12. SECURITY AUDIT LOGS VIEW (ADMIN) -->
+        <section id="view-audit-logs" style="display:none;">
+          <div class="glass table-card">
+            <div class="table-header-controls">
+              <div>
+                <h2>🛡️ Institutional Security Audit Trail</h2>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-top:2px;">
+                  Real-time immutable ledger capturing marks alterations, roster batch imports, and administrative actions.
+                </p>
+              </div>
+              <button class="btn btn-secondary" onclick="loadAuditLogs()">🔄 Refresh Audit Trail</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Entity</th>
+                    <th>Action</th>
+                    <th>Performed By</th>
+                    <th>Role</th>
+                    <th>Audit Details</th>
+                  </tr>
+                </thead>
+                <tbody id="audit-logs-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ALL MODALS -->
+
+  <!-- Student Profile Modal -->
+  <div id="student-profile-modal" class="modal-overlay">
+    <div class="modal-dialog glass" style="max-width:850px;">
+      <div class="modal-header">
+        <h3>Student Comprehensive 360° Profile</h3>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button id="modal-prof-pdf-btn" class="btn btn-sm btn-secondary" onclick="">📄 Download Official Transcript (PDF)</button>
+          <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('student-profile-modal')">✕</button>
+        </div>
+      </div>
+      <div class="profile-grid">
+        <div class="profile-card glass">
+          <div class="profile-avatar-lg">🎓</div>
+          <h3 id="modal-prof-name" style="font-size:1.3rem; margin-bottom:4px;">Rahul Verma</h3>
+          <span id="modal-prof-roll" class="badge badge-info" style="margin-bottom:12px;">R1001 · STU001</span>
+          <div style="font-size:0.85rem; color:var(--text-muted); word-break:break-all;" id="modal-prof-email">student@student360.com</div>
+          <div style="font-size:0.82rem; color:var(--text-muted);" id="modal-prof-phone">9876543201</div>
+
+          <div class="profile-details-grid">
+            <div>
+              <div class="profile-field-label">Department</div>
+              <div class="profile-field-value" id="modal-prof-dept">CSE</div>
+            </div>
+            <div>
+              <div class="profile-field-label">Course</div>
+              <div class="profile-field-value" id="modal-prof-course">B.Tech</div>
+            </div>
+            <div>
+              <div class="profile-field-label">Enrollment</div>
+              <div class="profile-field-value" id="modal-prof-yearsem">Yr 3 / Sem 5</div>
+            </div>
+            <div>
+              <div class="profile-field-label">Admission</div>
+              <div class="profile-field-value" id="modal-prof-admission">2023-08-01</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); gap:12px; margin-bottom:16px;">
+            <div class="stat-card glass" style="padding:16px;"><div class="stat-content"><div id="modal-prof-att" class="stat-number" style="font-size:1.6rem;">0%</div><div class="stat-label">Attendance</div></div></div>
+            <div class="stat-card glass" style="padding:16px;"><div class="stat-content"><div id="modal-prof-cgpa" class="stat-number" style="font-size:1.6rem; color:var(--secondary)">0.0</div><div class="stat-label">CGPA (10.0)</div></div></div>
+            <div class="stat-card glass" style="padding:16px;"><div class="stat-content"><div id="modal-prof-marks" class="stat-number" style="font-size:1.6rem;">0%</div><div class="stat-label">Average Marks</div></div></div>
+            <div class="stat-card glass" style="padding:16px;"><div class="stat-content"><div id="modal-prof-fee" class="badge badge-paid" style="margin-top:6px;">PAID</div><div class="stat-label">Fee Status</div></div></div>
+          </div>
+
+          <h4 style="margin-bottom:8px; font-size:0.95rem;">Academic Performance</h4>
+          <div class="table-responsive" style="max-height:160px; overflow-y:auto; margin-bottom:14px;">
+            <table class="data-table" style="font-size:0.82rem;">
+              <thead><tr><th>Subject</th><th>Internal</th><th>Assign</th><th>Endsem</th><th>Total</th></tr></thead>
+              <tbody id="modal-prof-marks-body"></tbody>
+            </table>
+          </div>
+
+          <h4 style="margin-bottom:8px; font-size:0.95rem;">Recent Activity</h4>
+          <div id="modal-prof-activity" style="font-size:0.85rem; max-height:120px; overflow-y:auto;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Add / Edit Modal -->
+  <div id="student-form-modal" class="modal-overlay">
+    <div class="modal-dialog glass">
+      <div class="modal-header">
+        <h3 id="student-modal-title">Register Student</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('student-form-modal')">✕</button>
+      </div>
+      <div id="student-form-errors" class="field-error" style="margin-bottom:14px;"></div>
+      <form id="student-form" onsubmit="Students.saveStudent(event)">
+        <input type="hidden" id="student-id-input">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Student Code *</label>
+            <input type="text" id="student-code-input" class="form-control" required placeholder="STU025">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Roll Number *</label>
+            <input type="text" id="student-roll-input" class="form-control" required placeholder="R1025">
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">First Name *</label>
+            <input type="text" id="student-fn-input" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name *</label>
+            <input type="text" id="student-ln-input" class="form-control" required>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Email *</label>
+            <input type="email" id="student-email-input" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="text" id="student-phone-input" class="form-control">
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Department *</label>
+            <select id="student-form-dept" class="form-select" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Course</label>
+            <select id="student-form-course" class="form-select"></select>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Year (1-4) *</label>
+            <input type="number" id="student-year-input" class="form-control" min="1" max="4" value="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Semester (1-8) *</label>
+            <input type="number" id="student-sem-input" class="form-control" min="1" max="8" value="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="student-status-input" class="form-select">
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="INACTIVE">INACTIVE</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('student-form-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Marks Entry Modal -->
+  <div id="marks-form-modal" class="modal-overlay">
+    <div class="modal-dialog glass">
+      <div class="modal-header">
+        <h3>Enter Student Examination Marks</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('marks-form-modal')">✕</button>
+      </div>
+      <div id="marks-form-errors" class="field-error" style="margin-bottom:14px;"></div>
+      <form id="marks-form" onsubmit="Marks.saveMarks(event)">
+        <div class="form-group">
+          <label class="form-label">Student *</label>
+          <select id="marks-form-student" class="form-select" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject *</label>
+          <select id="marks-form-subject" class="form-select" required></select>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Internal (Max 20)</label>
+            <input type="number" id="marks-in" class="form-control" min="0" max="20" value="0" required oninput="Marks.computePreview()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Assignment (Max 20)</label>
+            <input type="number" id="marks-as" class="form-control" min="0" max="20" value="0" required oninput="Marks.computePreview()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mid-Term (Max 30)</label>
+            <input type="number" id="marks-mid" class="form-control" min="0" max="30" value="0" required oninput="Marks.computePreview()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">End-Sem (Max 30)</label>
+            <input type="number" id="marks-end" class="form-control" min="0" max="30" value="0" required oninput="Marks.computePreview()">
+          </div>
+        </div>
+
+        <div id="marks-preview" class="glass" style="padding:12px; margin:16px 0; font-size:0.9rem;">
+          Total: <b>0/100</b> · Grade: <span class="badge badge-inactive">F</span>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('marks-form-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Marks</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Assignment Post Modal -->
+  <div id="assignment-form-modal" class="modal-overlay">
+    <div class="modal-dialog glass">
+      <div class="modal-header">
+        <h3>Post New Course Assignment</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('assignment-form-modal')">✕</button>
+      </div>
+      <form id="assignment-form" onsubmit="Assignments.saveAssignment(event)">
+        <div class="form-group">
+          <label class="form-label">Title *</label>
+          <input type="text" id="assignment-title-input" class="form-control" required placeholder="e.g. Graph Algorithms Implementation">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject *</label>
+          <select id="assignment-form-subject" class="form-select" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description *</label>
+          <textarea id="assignment-desc-input" class="form-control" rows="3" required></textarea>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Deadline Date *</label>
+            <input type="date" id="assignment-deadline-input" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Maximum Marks *</label>
+            <input type="number" id="assignment-marks-input" class="form-control" min="1" max="100" value="50" required>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('assignment-form-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Post Assignment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Assignment Submit Modal -->
+  <div id="assignment-submit-modal" class="modal-overlay">
+    <div class="modal-dialog glass">
+      <div class="modal-header">
+        <h3>Submit Assignment</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('assignment-submit-modal')">✕</button>
+      </div>
+      <form onsubmit="Assignments.submitAssignment(event)">
+        <input type="hidden" id="submit-assign-id">
+        <h4 id="submit-assign-title" style="margin-bottom:12px;">Assignment Title</h4>
+        <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:16px;">
+          Confirming submission will record your completion timestamp in the portal.
+        </p>
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('assignment-submit-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Confirm Submission</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Submissions Viewer Modal -->
+  <div id="submissions-modal" class="modal-overlay">
+    <div class="modal-dialog glass" style="max-width:700px;">
+      <div class="modal-header">
+        <h3>Student Submissions</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('submissions-modal')">✕</button>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead><tr><th>Student</th><th>Assignment</th><th>Submitted At</th><th>Status</th></tr></thead>
+          <tbody id="submissions-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fee Payment Record Modal -->
+  <div id="fee-pay-modal" class="modal-overlay">
+    <div class="modal-dialog glass">
+      <div class="modal-header">
+        <h3>Record Fee Payment</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('fee-pay-modal')">✕</button>
+      </div>
+      <form onsubmit="Fees.recordPayment(event)">
+        <input type="hidden" id="pay-fee-id">
+        <div style="margin-bottom:14px;">
+          <div>Student: <b id="pay-student-name">Name</b></div>
+          <div>Remaining Balance: <b id="pay-remaining-amount" style="color:#ef4444;">₹0</b></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Payment Amount (₹) *</label>
+          <input type="number" id="pay-amount-input" class="form-control" min="1" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Transaction / Cheque Remarks</label>
+          <input type="text" id="pay-remarks-input" class="form-control" placeholder="Counter cash / Online ref">
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('fee-pay-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Process Receipt</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notice Post Modal -->
+  <div id="notice-form-modal" class="modal-overlay">
+    <div class="modal-dialog glass">
+      <div class="modal-header">
+        <h3>Publish Circular Notice</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('notice-form-modal')">✕</button>
+      </div>
+      <form id="notice-form" onsubmit="Notices.saveNotice(event)">
+        <div class="form-group">
+          <label class="form-label">Notice Headline *</label>
+          <input type="text" id="notice-title-input" class="form-control" required placeholder="Important Academic Update">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select id="notice-priority-input" class="form-select">
+              <option value="NORMAL">NORMAL</option>
+              <option value="IMPORTANT">IMPORTANT</option>
+              <option value="URGENT">URGENT</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Audience</label>
+            <select id="notice-audience-input" class="form-select">
+              <option value="ALL">ALL</option>
+              <option value="STUDENTS">STUDENTS ONLY</option>
+              <option value="TEACHERS">FACULTY ONLY</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notice Body Content *</label>
+          <textarea id="notice-content-input" class="form-control" rows="4" required></textarea>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('notice-form-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Announcement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Timetable Add Modal -->
+  <div id="tt-form-modal" class="modal-overlay">
+    <div class="modal-dialog glass">
+      <div class="modal-header">
+        <h3>Add Schedule Slot</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('tt-form-modal')">✕</button>
+      </div>
+      <form id="tt-form" onsubmit="Timetable.saveSlot(event)">
+        <div class="form-group">
+          <label class="form-label">Day of Week *</label>
+          <select id="tt-day-input" class="form-select" required>
+            <option value="MONDAY">MONDAY</option>
+            <option value="TUESDAY">TUESDAY</option>
+            <option value="WEDNESDAY">WEDNESDAY</option>
+            <option value="THURSDAY">THURSDAY</option>
+            <option value="FRIDAY">FRIDAY</option>
+          </select>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Start Time *</label>
+            <input type="time" id="tt-start-input" class="form-control" required value="09:00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">End Time *</label>
+            <input type="time" id="tt-end-input" class="form-control" required value="10:00">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject *</label>
+          <select id="tt-form-subject" class="form-select" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Faculty *</label>
+          <select id="tt-form-teacher" class="form-select" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Classroom / Lab *</label>
+          <input type="text" id="tt-room-input" class="form-control" required placeholder="Room 301 / Lab 2">
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('tt-form-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Slot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- User Create Modal -->
+  <div id="user-form-modal" class="modal-overlay">
+    <div class="modal-dialog glass">
+      <div class="modal-header">
+        <h3>Create System User Account</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('user-form-modal')">✕</button>
+      </div>
+      <form id="user-form" onsubmit="Users.saveUser(event)">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" id="user-name-input" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input type="email" id="user-email-input" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Initial Password *</label>
+          <input type="password" id="user-password-input" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role *</label>
+          <select id="user-role-input" class="form-select" required>
+            <option value="ADMIN">ADMIN</option>
+            <option value="TEACHER">TEACHER</option>
+            <option value="STUDENT">STUDENT</option>
+          </select>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('user-form-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- User Reset Password Modal -->
+  <div id="user-reset-modal" class="modal-overlay">
+    <div class="modal-dialog glass">
+      <div class="modal-header">
+        <h3>Reset User Password</h3>
+        <button class="btn btn-secondary btn-icon btn-sm" onclick="closeModal('user-reset-modal')">✕</button>
+      </div>
+      <form onsubmit="Users.submitResetPassword(event)">
+        <input type="hidden" id="reset-user-id">
+        <p style="font-size:0.88rem; margin-bottom:14px;">Resetting credentials for: <b id="reset-user-email"></b></p>
+        <div class="form-group">
+          <label class="form-label">New Password *</label>
+          <input type="password" id="reset-new-password" class="form-control" required placeholder="••••••••">
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('user-reset-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/students.js"></script>
+  <script src="js/attendance.js"></script>
+  <script src="js/marks.js"></script>
+  <script src="js/assignments.js"></script>
+  <script src="js/fees.js"></script>
+  <script src="js/notices.js"></script>
+  <script src="js/timetable.js"></script>
+  <script src="js/users.js"></script>
+  <script src="js/cursor.js"></script>
+
+  <script>
+    // Theme Management
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('student360_theme', next);
+    }
+    const savedTheme = localStorage.getItem('student360_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    function toggleSidebar() {
+      const sb = document.getElementById('sidebar');
+      if (window.innerWidth <= 768) {
+        sb.classList.toggle('mobile-open');
+      } else {
+        sb.classList.toggle('collapsed');
+      }
+    }
+
+    function closeModal(id) {
+      document.getElementById(id)?.classList.remove('active');
+    }
+
+    // Modal click outside to close
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+      m.addEventListener('click', (e) => {
+        if (e.target === m) m.classList.remove('active');
+      });
+    });
+
+    // View Routing
+    const viewTitles = {
+      'dashboard': 'Dashboard Overview',
+      'students': 'Students Directory & Profiler',
+      'my-profile': 'My Student Profile',
+      'attendance': 'Attendance Records & Bulk Marker',
+      'marks': 'Examination Marks & Grading',
+      'assignments': 'Course Assignments',
+      'fees': 'Fee Management Ledger',
+      'notices': 'Campus Circulars & Notices',
+      'timetable': 'Weekly Academic Timetable',
+      'simulator': 'Grade Goal & What-If GPA Simulator',
+      'audit-logs': 'Institutional Security Audit Trail',
+      'users': 'User Account Management'
+    };
+
+    const rolePermissions = {
+      'ADMIN': ['dashboard', 'students', 'fees', 'notices', 'timetable', 'audit-logs', 'users'],
+      'TEACHER': ['dashboard', 'students', 'attendance', 'marks', 'assignments', 'notices', 'timetable'],
+      'STUDENT': ['my-profile', 'attendance', 'marks', 'assignments', 'fees', 'notices', 'timetable', 'simulator']
+    };
+
+    function navigate(viewName) {
+      const u = Auth.getCurrentUser();
+      const role = u?.role || 'STUDENT';
+      const allowedViews = rolePermissions[role] || [];
+      if (!allowedViews.includes(viewName)) {
+        // Fallback to default view for role
+        viewName = role === 'STUDENT' ? 'my-profile' : 'dashboard';
+      }
+
+      document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('onclick')?.includes(`'${viewName}'`)) {
+          link.classList.add('active');
+        }
+      });
+
+      document.querySelectorAll('main.content-body > section').forEach(sec => {
+        sec.style.display = 'none';
+      });
+
+      const target = document.getElementById('view-' + viewName);
+      if (target) {
+        target.style.display = 'block';
+        document.getElementById('view-title').textContent = viewTitles[viewName] || 'Dashboard';
+      }
+
+      // Trigger module inits
+      if (viewName === 'dashboard') Dashboard.loadStats();
+      if (viewName === 'students') Students.init();
+      if (viewName === 'attendance') Attendance.init();
+      if (viewName === 'marks') Marks.init();
+      if (viewName === 'assignments') Assignments.init();
+      if (viewName === 'fees') Fees.init();
+      if (viewName === 'notices') Notices.init();
+      if (viewName === 'timetable') Timetable.init();
+      if (viewName === 'simulator') runGradeSimulation();
+      if (viewName === 'audit-logs') loadAuditLogs();
+      if (viewName === 'users') Users.init();
+      if (viewName === 'my-profile') loadMyProfileView();
+    }
+
+    async function loadMyProfileView() {
+      try {
+        const p = await API.get('/students/profile/me');
+        const container = document.getElementById('my-profile-container');
+        container.innerHTML = `
+          <div class="profile-grid">
+            <div class="profile-card glass">
+              <div class="profile-avatar-lg">🎓</div>
+              <h3>${p.firstName} ${p.lastName}</h3>
+              <span class="badge badge-info" style="margin-bottom:12px;">${p.rollNumber} · ${p.studentCode}</span>
+              <p style="font-size:0.85rem; color:var(--text-muted);">${p.email}</p>
+              <div style="margin:12px 0;">
+                <button class="btn btn-sm btn-primary" onclick="window.open('/api/advanced/transcript/pdf/my', '_blank')">📄 Download Official Transcript (PDF)</button>
+              </div>
+              <div class="profile-details-grid">
+                <div><div class="profile-field-label">Department</div><div class="profile-field-value">${p.departmentName}</div></div>
+                <div><div class="profile-field-label">Course</div><div class="profile-field-value">${p.courseName || '-'}</div></div>
+                <div><div class="profile-field-label">Year/Sem</div><div class="profile-field-value">Yr ${p.year} / Sem ${p.semester}</div></div>
+                <div><div class="profile-field-label">Status</div><div class="profile-field-value"><span class="badge badge-active">${p.status}</span></div></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); gap:14px; margin-bottom:16px;">
+                <div class="stat-card glass"><div class="stat-content"><div class="stat-number" style="color:${p.belowAttendanceThreshold ? '#ef4444' : '#10b981'}">${p.attendancePercentage}%</div><div class="stat-label">Attendance ${p.belowAttendanceThreshold ? '(BELOW THRESHOLD)' : ''}</div></div></div>
+                <div class="stat-card glass"><div class="stat-content"><div class="stat-number" style="color:var(--secondary)">${p.cgpa}</div><div class="stat-label">Cumulative GPA</div></div></div>
+              </div>
+              <div class="glass" style="padding:20px;">
+                <h4 style="margin-bottom:12px;">My Marks</h4>
+                <table class="data-table">
+                  <thead><tr><th>Subject</th><th>Internal</th><th>Assignment</th><th>Endsem</th><th>Total</th><th>Grade</th></tr></thead>
+                  <tbody>
+                    ${(p.recentMarks || []).map(m => `
+                      <tr>
+                        <td><b>${m.subjectCode}</b> - ${m.subjectName}</td>
+                        <td>${m.internal}/20</td>
+                        <td>${m.assignment}/20</td>
+                        <td>${m.endSem}/30</td>
+                        <td><b>${m.total}/100</b></td>
+                        <td><span class="badge badge-active">${m.grade}</span></td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        document.getElementById('my-profile-container').innerHTML = `<div style="color:var(--danger)">${err.message}</div>`;
+      }
+    }
+
+    async function runGradeSimulation() {
+      const target = document.getElementById('sim-target-input').value || 8.5;
+      const container = document.getElementById('sim-results-container');
+      container.innerHTML = `<div style="text-align:center; padding:30px;"><div class="spinner"></div><p style="margin-top:10px;">Computing academic trajectory and optimal end-semester marks...</p></div>`;
+
+      try {
+        let endpoint = '/advanced/simulate-grade/my?targetCgpa=' + target;
+        if (!Auth.isStudent()) {
+          // Faculty/Admin: simulate for first student or selected student
+          const students = await API.get('/students?page=0&size=1');
+          const studentId = students.content?.[0]?.id || 1;
+          endpoint = `/advanced/simulate-grade?studentId=${studentId}&targetCgpa=${target}`;
+        }
+
+        const res = await API.get(endpoint);
+        const badgeColor = res.isAchievable ? (res.feasibilityStatus === 'REALISTIC' ? '#10b981' : '#f59e0b') : '#ef4444';
+
+        container.innerHTML = `
+          <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom:20px;">
+            <div class="stat-card glass"><div class="stat-content"><div class="stat-number">${res.currentCgpa}</div><div class="stat-label">Current CGPA</div></div></div>
+            <div class="stat-card glass"><div class="stat-content"><div class="stat-number" style="color:var(--primary)">${res.targetCgpa}</div><div class="stat-label">Target CGPA</div></div></div>
+            <div class="stat-card glass"><div class="stat-content"><div class="stat-number" style="color:${badgeColor}">${res.requiredSemesterGpa}</div><div class="stat-label">Required Next Semester GPA</div></div></div>
+            <div class="stat-card glass"><div class="stat-content"><div class="stat-number" style="color:${badgeColor}; font-size:1.1rem; text-transform:uppercase;">${res.feasibilityStatus.replace(/_/g, ' ')}</div><div class="stat-label">Feasibility Assessment</div></div></div>
+          </div>
+
+          <div class="glass" style="padding:20px; margin-bottom:20px; border-left:4px solid ${badgeColor};">
+            <h4 style="margin-bottom:6px;">Smart Advisory Strategy for ${res.studentName}</h4>
+            <p style="color:var(--text-muted); font-size:0.92rem;">${res.advice}</p>
+          </div>
+
+          <div class="glass table-card">
+            <div style="padding:16px 20px; border-bottom:1px solid var(--border);">
+              <h3>Recommended End-Semester Target per Subject</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Subject Code</th>
+                    <th>Course Subject Name</th>
+                    <th>Credits</th>
+                    <th>Internals Score (out of 70)</th>
+                    <th>Min. End-Sem Marks Needed (out of 30)</th>
+                    <th>Target Grade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${res.subjectBreakdown.map(s => `
+                    <tr>
+                      <td><b>${s.subjectCode}</b></td>
+                      <td>${s.subjectName}</td>
+                      <td><span class="badge badge-info">${s.credits} Credits</span></td>
+                      <td><b>${s.currentInternalsTotal} / 70</b></td>
+                      <td><span style="font-size:1.05rem; font-weight:700; color:${s.minEndSemMarksNeeded > 25 ? '#ef4444' : '#10b981'}">${s.minEndSemMarksNeeded} / 30</span></td>
+                      <td><span class="badge badge-active">${s.recommendedGrade}</span></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        container.innerHTML = `<div class="glass" style="padding:20px; color:var(--danger)">${err.message}</div>`;
+      }
+    }
+
+    async function loadAuditLogs() {
+      const tbody = document.getElementById('audit-logs-table-body');
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px;"><div class="spinner"></div></td></tr>`;
+      try {
+        const logs = await API.get('/advanced/audit-logs');
+        if (!logs || logs.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">No audit logs recorded yet.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = logs.map(l => `
+          <tr>
+            <td style="font-size:0.85rem; color:var(--text-muted); white-space:nowrap;">${l.timestamp?.replace('T', ' ').substring(0, 19)}</td>
+            <td><span class="badge badge-info">${l.entityName} #${l.entityId}</span></td>
+            <td><b>${l.action}</b></td>
+            <td>${l.performedBy}</td>
+            <td><span class="badge badge-active">${l.userRole || 'USER'}</span></td>
+            <td style="font-size:0.88rem;">${l.details || '-'}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:var(--danger); padding:20px;">${err.message}</td></tr>`;
+      }
+    }
+
+    async function uploadExcelRoster(input) {
+      if (!input.files || input.files.length === 0) return;
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/api/advanced/import/students-excel', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Success: ' + data.message);
+          Students.loadStudents(0);
+        } else {
+          alert('Import failed: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Upload failed: ' + err.message);
+      } finally {
+        input.value = '';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', async () => {
+      Dashboard.initParticles();
+      const user = await Auth.checkSession();
+      if (!user) {
+        window.location.href = '/login.html';
+        return;
+      }
+      Auth.applyRoleRestrictions();
+      Dashboard.init();
+      if (Auth.isStudent()) {
+        navigate('my-profile');
+      } else {
+        navigate('dashboard');
+      }
+    });
+  </script>
+</body>
+</html>

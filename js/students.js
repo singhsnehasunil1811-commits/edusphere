@@ -1,270 +1,308 @@
-/* 
-  Student Management Page Controller
-  Supports CRUD operations, search, filter, pagination, and modal forms
-*/
+// STUDENT360 — Students Management & Profile Module
+const Students = {
+  departments: [],
+  courses: [],
+  currentPage: 0,
+  pageSize: 10,
+  currentSort: 'id',
+  currentSortDir: 'asc',
+  selectedStudent: null,
 
-let allStudents = [];
-let filteredStudents = [];
-let currentPage = 1;
-const pageSize = 5;
+  async init() {
+    await this.loadMetadata();
+    await this.loadStudents();
+  },
 
-document.addEventListener("DOMContentLoaded", () => {
-  enforceRoleAuthority();
-  loadStudentsData();
-  setupEventListeners();
-});
+  async loadMetadata() {
+    try {
+      this.departments = await API.get('/departments') || [];
+      this.courses = await API.get('/courses') || [];
+      this.populateDropdowns();
+    } catch (e) {
+      console.error('Metadata load error:', e);
+    }
+  },
 
-function enforceRoleAuthority() {
-  const user = auth.getCurrentUser() || {};
-  const addBtn = document.getElementById("addStudentBtn");
-  if (user.role === "Student" && addBtn) {
-    addBtn.style.display = "none";
-  }
-}
+  populateDropdowns() {
+    const deptSelect = document.getElementById('student-filter-dept');
+    const formDeptSelect = document.getElementById('student-form-dept');
+    const courseSelect = document.getElementById('student-filter-course');
+    const formCourseSelect = document.getElementById('student-form-course');
 
-async function loadStudentsData() {
-  try {
-    allStudents = await api.getStudents();
-    applyFilters();
-  } catch (err) {
-    showToast("Failed to fetch students data", "error");
-  }
-}
+    const deptOptions = '<option value="">All Departments</option>' +
+      this.departments.map(d => `<option value="${d.id}">${d.name} (${d.code || ''})</option>`).join('');
 
-function setupEventListeners() {
-  const searchInput = document.getElementById("studentSearchInput");
-  const deptFilter = document.getElementById("deptFilterSelect");
-  const yearFilter = document.getElementById("yearFilterSelect");
+    const formDeptOptions = '<option value="">Select Department *</option>' +
+      this.departments.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
 
-  if (searchInput) searchInput.addEventListener("input", applyFilters);
-  if (deptFilter) deptFilter.addEventListener("change", applyFilters);
-  if (yearFilter) yearFilter.addEventListener("change", applyFilters);
+    const courseOptions = '<option value="">All Courses</option>' +
+      this.courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
-  const addForm = document.getElementById("addStudentForm");
-  if (addForm) {
-    addForm.addEventListener("submit", handleAddStudent);
-  }
+    const formCourseOptions = '<option value="">Select Course</option>' +
+      this.courses.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
-  const editForm = document.getElementById("editStudentForm");
-  if (editForm) {
-    editForm.addEventListener("submit", handleEditStudent);
-  }
-}
+    if (deptSelect) deptSelect.innerHTML = deptOptions;
+    if (formDeptSelect) formDeptSelect.innerHTML = formDeptOptions;
+    if (courseSelect) courseSelect.innerHTML = courseOptions;
+    if (formCourseSelect) formCourseSelect.innerHTML = formCourseOptions;
+  },
 
-function applyFilters() {
-  const search = (document.getElementById("studentSearchInput")?.value || "").toLowerCase();
-  const dept = document.getElementById("deptFilterSelect")?.value || "ALL";
-  const year = document.getElementById("yearFilterSelect")?.value || "ALL";
+  async loadStudents(page = 0) {
+    this.currentPage = page;
+    const q = document.getElementById('student-search')?.value || '';
+    const deptId = document.getElementById('student-filter-dept')?.value || '';
+    const courseId = document.getElementById('student-filter-course')?.value || '';
+    const sem = document.getElementById('student-filter-sem')?.value || '';
+    const year = document.getElementById('student-filter-year')?.value || '';
+    const status = document.getElementById('student-filter-status')?.value || '';
 
-  filteredStudents = allStudents.filter(s => {
-    const matchesSearch = s.name.toLowerCase().includes(search) ||
-      s.rollNo.toLowerCase().includes(search) ||
-      s.email.toLowerCase().includes(search) ||
-      s.studentId.toLowerCase().includes(search);
-    const matchesDept = dept === "ALL" || s.department === dept;
-    const matchesYear = year === "ALL" || s.year === year;
+    let url = `/students/paged?page=${page}&size=${this.pageSize}&sortBy=${this.currentSort}&sortDir=${this.currentSortDir}`;
+    if (q) url += `&q=${encodeURIComponent(q)}`;
+    if (deptId) url += `&departmentId=${deptId}`;
+    if (courseId) url += `&courseId=${courseId}`;
+    if (sem) url += `&semester=${sem}`;
+    if (year) url += `&year=${year}`;
+    if (status) url += `&status=${status}`;
 
-    return matchesSearch && matchesDept && matchesYear;
-  });
+    const tbody = document.getElementById('students-table-body');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px;">Loading students...</td></tr>';
 
-  currentPage = 1;
-  renderStudentsTable();
-}
+    try {
+      const data = await API.get(url);
+      this.renderTable(data);
+      this.renderPagination(data);
+    } catch (err) {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--danger); padding:30px;">${err.message}</td></tr>`;
+    }
+  },
 
-function renderStudentsTable() {
-  const tbody = document.getElementById("studentsTableBody");
-  const paginationInfo = document.getElementById("paginationInfo");
-  const paginationControls = document.getElementById("paginationControls");
-  if (!tbody) return;
+  renderTable(pagedData) {
+    const tbody = document.getElementById('students-table-body');
+    if (!tbody) return;
 
-  const user = auth.getCurrentUser() || {};
-  const isStudent = user.role === "Student";
-  const isAdmin = user.role === "Admin";
-  const isFaculty = user.role === "Faculty";
+    if (!pagedData.content || pagedData.content.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No student records found matching criteria.</td></tr>';
+      return;
+    }
 
-  if (filteredStudents.length === 0) {
-    tbody.innerHTML = `
+    const isAdmin = Auth.isAdmin();
+
+    tbody.innerHTML = pagedData.content.map(s => `
       <tr>
-        <td colspan="10">
-          <div class="empty-state">
-            <i class="fas fa-user-slash"></i>
-            <h3>No Students Found</h3>
-            <p>Try adjusting your search criteria or add a new student.</p>
+        <td><b>${s.rollNumber}</b><br><small style="color:var(--text-muted)">${s.studentCode}</small></td>
+        <td>
+          <a href="javascript:void(0)" onclick="Students.viewProfile(${s.id})" style="font-weight:600; color:var(--text); text-decoration:none;">
+            ${s.firstName} ${s.lastName}
+          </a>
+          <br><small style="color:var(--text-muted)">${s.email}</small>
+        </td>
+        <td>${s.departmentName || '-'}</td>
+        <td>${s.courseName ? s.courseName.replace('B.Tech ', '') : '-'}</td>
+        <td>Yr ${s.year} / Sem ${s.semester}</td>
+        <td><span class="badge badge-${s.status.toLowerCase()}">${s.status}</span></td>
+        <td style="text-align:right;">
+          <div style="display:inline-flex; gap:6px;">
+            <button class="btn btn-sm btn-secondary" onclick="Students.viewProfile(${s.id})" title="View Profile">👁</button>
+            <button class="btn btn-sm btn-secondary" onclick="window.open('/api/advanced/transcript/pdf/${s.id}', '_blank')" title="Download PDF Transcript">📄</button>
+            ${isAdmin ? `
+              <button class="btn btn-sm btn-secondary" onclick="Students.openEditModal(${s.id})" title="Edit">✏</button>
+              <button class="btn btn-sm btn-danger" onclick="Students.deleteStudent(${s.id})" title="Delete">🗑</button>
+            ` : ''}
           </div>
         </td>
       </tr>
-    `;
-    if (paginationInfo) paginationInfo.innerText = "Showing 0 of 0 students";
-    if (paginationControls) paginationControls.innerHTML = "";
-    return;
-  }
+    `).join('');
+  },
 
-  const start = (currentPage - 1) * pageSize;
-  const end = Math.min(start + pageSize, filteredStudents.length);
-  const pageItems = filteredStudents.slice(start, end);
+  renderPagination(pagedData) {
+    const infoEl = document.getElementById('students-page-info');
+    const controlsEl = document.getElementById('students-page-controls');
+    if (!infoEl || !controlsEl) return;
 
-  tbody.innerHTML = pageItems.map(s => `
-    <tr>
-      <td><strong>${s.studentId}</strong></td>
-      <td>
-        <div class="table-avatar" style="background:var(--primary-color); color:#fff; font-weight:700;">${s.name.charAt(0)}</div>
-      </td>
-      <td>
-        <strong>${s.name}</strong>
-        <div style="font-size:11px; color:var(--text-muted);">${s.gender}, DOB: ${s.dob || 'N/A'}</div>
-      </td>
-      <td>${s.rollNo}</td>
-      <td>${s.department}</td>
-      <td>${s.course}</td>
-      <td><span class="badge badge-info">${s.year}</span></td>
-      <td>${s.email}</td>
-      <td><span class="badge badge-success">${s.status || "Active"}</span></td>
-      <td>
-        <div class="action-buttons">
-          <button class="btn btn-secondary btn-sm btn-icon-only" onclick="viewStudentProfile('${s.id}')" title="View Profile"><i class="fas fa-eye"></i></button>
-          ${!isStudent ? `<button class="btn btn-secondary btn-sm btn-icon-only" onclick="openEditStudentModal(${s.id})" title="Edit"><i class="fas fa-edit"></i></button>` : ''}
-          ${!isStudent ? `<button class="btn btn-danger btn-sm btn-icon-only" onclick="confirmDeleteStudent(${s.id})" title="Delete"><i class="fas fa-trash-alt"></i></button>` : ''}
-        </div>
-      </td>
-    </tr>
-  `).join("");
+    const start = pagedData.totalElements === 0 ? 0 : pagedData.pageNumber * pagedData.pageSize + 1;
+    const end = Math.min((pagedData.pageNumber + 1) * pagedData.pageSize, pagedData.totalElements);
+    infoEl.textContent = `Showing ${start} to ${end} of ${pagedData.totalElements} records`;
 
-  // Pagination UI
-  const totalPages = Math.ceil(filteredStudents.length / pageSize);
-  if (paginationInfo) {
-    paginationInfo.innerText = `Showing ${start + 1} to ${end} of ${filteredStudents.length} students`;
-  }
+    let html = '';
+    html += `<button class="btn btn-sm btn-secondary" ${pagedData.isFirst ? 'disabled' : ''} onclick="Students.loadStudents(${pagedData.pageNumber - 1})">Prev</button>`;
 
-  if (paginationControls) {
-    let btns = `<button class="page-btn" ${currentPage === 1 ? "disabled" : ""} onclick="changePage(${currentPage - 1})"><i class="fas fa-chevron-left"></i></button>`;
-    for (let i = 1; i <= totalPages; i++) {
-      btns += `<button class="page-btn ${i === currentPage ? "active" : ""}" onclick="changePage(${i})">${i}</button>`;
+    for (let p = 0; p < pagedData.totalPages; p++) {
+      if (p === 0 || p === pagedData.totalPages - 1 || Math.abs(p - pagedData.pageNumber) <= 1) {
+        html += `<button class="btn btn-sm ${p === pagedData.pageNumber ? 'btn-primary' : 'btn-secondary'}" onclick="Students.loadStudents(${p})">${p + 1}</button>`;
+      } else if (Math.abs(p - pagedData.pageNumber) === 2) {
+        html += `<span style="padding:0 4px; color:var(--text-muted)">...</span>`;
+      }
     }
-    btns += `<button class="page-btn" ${currentPage === totalPages ? "disabled" : ""} onclick="changePage(${currentPage + 1})"><i class="fas fa-chevron-right"></i></button>`;
-    paginationControls.innerHTML = btns;
-  }
-}
 
-function changePage(page) {
-  currentPage = page;
-  renderStudentsTable();
-}
+    html += `<button class="btn btn-sm btn-secondary" ${pagedData.isLast ? 'disabled' : ''} onclick="Students.loadStudents(${pagedData.pageNumber + 1})">Next</button>`;
+    controlsEl.innerHTML = html;
+  },
 
-// Add Student Handler
-async function handleAddStudent(e) {
-  e.preventDefault();
-  const user = typeof auth !== "undefined" ? auth.getCurrentUser() : null;
-  if (!user || user.role === "Student") {
-    showToast("Permission denied: Students cannot add new students.", "warning");
-    closeModal("addStudentModal");
-    return;
-  }
-  if (!validation.validateRequiredFields("addStudentForm")) return;
-
-  const data = {
-    name: document.getElementById("addName").value,
-    rollNo: document.getElementById("addRollNo").value,
-    email: document.getElementById("addEmail").value,
-    phone: document.getElementById("addPhone").value,
-    gender: document.getElementById("addGender").value,
-    dob: document.getElementById("addDob").value,
-    department: document.getElementById("addDepartment").value,
-    course: document.getElementById("addCourse").value,
-    year: document.getElementById("addYear").value,
-    semester: parseInt(document.getElementById("addSemester").value),
-    division: document.getElementById("addDivision").value,
-    address: document.getElementById("addAddress").value,
-    admissionDate: document.getElementById("addAdmissionDate").value || new Date().toISOString().split('T')[0],
-    status: "Active"
-  };
-
-  try {
-    await api.createStudent(data);
-    showToast("Student added successfully!", "success");
-    closeModal("addStudentModal");
-    document.getElementById("addStudentForm").reset();
-    await loadStudentsData();
-  } catch (err) {
-    showToast("Failed to create student", "error");
-  }
-}
-
-// Edit Student Modal Populate
-function openEditStudentModal(id) {
-  const s = allStudents.find(item => item.id === id);
-  if (!s) return;
-
-  document.getElementById("editStudentId").value = s.id;
-  document.getElementById("editName").value = s.name;
-  document.getElementById("editRollNo").value = s.rollNo;
-  document.getElementById("editEmail").value = s.email;
-  document.getElementById("editPhone").value = s.phone || "";
-  document.getElementById("editGender").value = s.gender || "Male";
-  document.getElementById("editDob").value = s.dob || "";
-  document.getElementById("editDepartment").value = s.department;
-  document.getElementById("editCourse").value = s.course;
-  document.getElementById("editYear").value = s.year;
-  document.getElementById("editSemester").value = s.semester || 1;
-  document.getElementById("editDivision").value = s.division || "A";
-  document.getElementById("editAddress").value = s.address || "";
-
-  openModal("editStudentModal");
-}
-
-async function handleEditStudent(e) {
-  e.preventDefault();
-  const user = typeof auth !== "undefined" ? auth.getCurrentUser() : null;
-  if (!user || user.role === "Student") {
-    showToast("Permission denied: Students cannot edit student records.", "warning");
-    closeModal("editStudentModal");
-    return;
-  }
-  if (!validation.validateRequiredFields("editStudentForm")) return;
-
-  const id = parseInt(document.getElementById("editStudentId").value);
-  const data = {
-    name: document.getElementById("editName").value,
-    rollNo: document.getElementById("editRollNo").value,
-    email: document.getElementById("editEmail").value,
-    phone: document.getElementById("editPhone").value,
-    gender: document.getElementById("editGender").value,
-    dob: document.getElementById("editDob").value,
-    department: document.getElementById("editDepartment").value,
-    course: document.getElementById("editCourse").value,
-    year: document.getElementById("editYear").value,
-    semester: parseInt(document.getElementById("editSemester").value),
-    division: document.getElementById("editDivision").value,
-    address: document.getElementById("editAddress").value
-  };
-
-  try {
-    await api.updateStudent(id, data);
-    showToast("Student updated successfully!", "success");
-    closeModal("editStudentModal");
-    await loadStudentsData();
-  } catch (err) {
-    showToast("Failed to update student", "error");
-  }
-}
-
-// Delete Confirmation
-function confirmDeleteStudent(id) {
-  const user = typeof auth !== "undefined" ? auth.getCurrentUser() : null;
-  if (!user || user.role === "Student") {
-    showToast("Permission denied: Students cannot delete student records.", "warning");
-    return;
-  }
-  showConfirm("Delete Student", "Are you sure you want to delete this student record? This action cannot be undone.", async () => {
+  async viewProfile(studentId) {
     try {
-      await api.deleteStudent(id);
-      showToast("Student deleted successfully", "success");
-      await loadStudentsData();
+      const p = await API.get(`/students/${studentId}/profile`);
+      this.selectedStudent = p;
+      this.renderProfileModal(p);
     } catch (err) {
-      showToast("Failed to delete student", "error");
+      API.toast(err.message, 'error');
     }
-  });
-}
+  },
 
-function viewStudentProfile(id) {
-  window.location.href = `student-profile.html?id=${id}`;
-}
+  renderProfileModal(p) {
+    const modal = document.getElementById('student-profile-modal');
+    if (!modal) return;
+
+    document.getElementById('modal-prof-name').textContent = `${p.firstName} ${p.lastName}`;
+    document.getElementById('modal-prof-roll').textContent = `${p.rollNumber} · ${p.studentCode}`;
+    document.getElementById('modal-prof-email').textContent = p.email;
+    document.getElementById('modal-prof-phone').textContent = p.phone || 'N/A';
+    document.getElementById('modal-prof-dept').textContent = p.departmentName;
+    document.getElementById('modal-prof-course').textContent = p.courseName || 'N/A';
+    document.getElementById('modal-prof-yearsem').textContent = `Year ${p.year} · Semester ${p.semester}`;
+    document.getElementById('modal-prof-admission').textContent = p.admissionDate || 'N/A';
+
+    const pdfBtn = document.getElementById('modal-prof-pdf-btn');
+    if (pdfBtn) {
+      pdfBtn.onclick = () => window.open(`/api/advanced/transcript/pdf/${p.id}`, '_blank');
+    }
+
+    // Metrics
+    const attEl = document.getElementById('modal-prof-att');
+    if (attEl) {
+      attEl.textContent = `${p.attendancePercentage}%`;
+      attEl.style.color = p.belowAttendanceThreshold ? '#ef4444' : '#10b981';
+    }
+
+    const marksEl = document.getElementById('modal-prof-marks');
+    if (marksEl) marksEl.textContent = `${p.averageMarks}%`;
+
+    const cgpaEl = document.getElementById('modal-prof-cgpa');
+    if (cgpaEl) cgpaEl.textContent = `${p.cgpa} / 10.0`;
+
+    const feeEl = document.getElementById('modal-prof-fee');
+    if (feeEl) {
+      feeEl.textContent = p.feeStatus;
+      feeEl.className = `badge badge-${p.feeStatus.toLowerCase().replace('_', '-')}`;
+    }
+
+    // Marks table
+    const marksTbody = document.getElementById('modal-prof-marks-body');
+    if (marksTbody) {
+      if (!p.recentMarks || p.recentMarks.length === 0) {
+        marksTbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No marks recorded</td></tr>';
+      } else {
+        marksTbody.innerHTML = p.recentMarks.map(m => `
+          <tr>
+            <td><b>${m.subjectCode}</b><br><small>${m.subjectName}</small></td>
+            <td>${m.internal}/20</td>
+            <td>${m.assignment}/20</td>
+            <td>${m.endSem}/30</td>
+            <td><b>${m.total}/100</b> · <span class="badge badge-active">${m.grade}</span></td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    // Activity timeline
+    const actContainer = document.getElementById('modal-prof-activity');
+    if (actContainer) {
+      if (!p.recentActivity || p.recentActivity.length === 0) {
+        actContainer.innerHTML = '<div style="color:var(--text-muted)">No recent activity</div>';
+      } else {
+        actContainer.innerHTML = p.recentActivity.map(a => `
+          <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem;">
+            <span class="badge badge-info" style="margin-right:6px;">${a.type}</span>
+            <span>${a.description}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    modal.classList.add('active');
+  },
+
+  openAddModal() {
+    document.getElementById('student-modal-title').textContent = 'Add New Student';
+    document.getElementById('student-form').reset();
+    document.getElementById('student-id-input').value = '';
+    document.getElementById('student-form-errors').innerHTML = '';
+    document.getElementById('student-form-modal').classList.add('active');
+  },
+
+  async openEditModal(studentId) {
+    try {
+      const s = await API.get(`/students/${studentId}`);
+      document.getElementById('student-modal-title').textContent = 'Edit Student';
+      document.getElementById('student-id-input').value = s.id;
+      document.getElementById('student-code-input').value = s.studentCode;
+      document.getElementById('student-roll-input').value = s.rollNumber;
+      document.getElementById('student-fn-input').value = s.firstName;
+      document.getElementById('student-ln-input').value = s.lastName;
+      document.getElementById('student-email-input').value = s.email;
+      document.getElementById('student-phone-input').value = s.phone || '';
+      document.getElementById('student-form-dept').value = s.departmentId || '';
+      document.getElementById('student-form-course').value = s.courseId || '';
+      document.getElementById('student-year-input').value = s.year;
+      document.getElementById('student-sem-input').value = s.semester;
+      document.getElementById('student-status-input').value = s.status;
+      document.getElementById('student-form-errors').innerHTML = '';
+      document.getElementById('student-form-modal').classList.add('active');
+    } catch (e) {
+      API.toast(e.message, 'error');
+    }
+  },
+
+  async saveStudent(event) {
+    event.preventDefault();
+    const errContainer = document.getElementById('student-form-errors');
+    errContainer.innerHTML = '';
+
+    const id = document.getElementById('student-id-input').value;
+    const body = {
+      studentCode: document.getElementById('student-code-input').value.trim(),
+      rollNumber: document.getElementById('student-roll-input').value.trim(),
+      firstName: document.getElementById('student-fn-input').value.trim(),
+      lastName: document.getElementById('student-ln-input').value.trim(),
+      email: document.getElementById('student-email-input').value.trim(),
+      phone: document.getElementById('student-phone-input').value.trim(),
+      departmentId: Number(document.getElementById('student-form-dept').value),
+      courseId: document.getElementById('student-form-course').value ? Number(document.getElementById('student-form-course').value) : null,
+      year: Number(document.getElementById('student-year-input').value),
+      semester: Number(document.getElementById('student-sem-input').value),
+      status: document.getElementById('student-status-input').value
+    };
+
+    try {
+      if (id) {
+        await API.put(`/students/${id}`, body);
+        API.toast('Student updated successfully!', 'success');
+      } else {
+        await API.post('/students', body);
+        API.toast('Student registered successfully!', 'success');
+      }
+      document.getElementById('student-form-modal').classList.remove('active');
+      await this.loadStudents(this.currentPage);
+      Dashboard.loadStats();
+    } catch (err) {
+      if (err.errors) {
+        errContainer.innerHTML = Object.entries(err.errors).map(([k, v]) => `<div>• ${v}</div>`).join('');
+      } else {
+        errContainer.innerHTML = `<div>• ${err.message}</div>`;
+      }
+    }
+  },
+
+  async deleteStudent(studentId) {
+    if (!confirm('Are you sure you want to delete this student record? This action cannot be undone.')) {
+      return;
+    }
+    try {
+      await API.delete(`/students/${studentId}`);
+      API.toast('Student deleted successfully', 'success');
+      await this.loadStudents(this.currentPage);
+      Dashboard.loadStats();
+    } catch (err) {
+      API.toast(err.message, 'error');
+    }
+  }
+};
