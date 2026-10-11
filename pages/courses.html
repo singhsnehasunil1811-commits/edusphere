@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Management - EduPortal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css?v=5">
+  <link rel="stylesheet" href="../css/forms.css?v=5">
+  <link rel="stylesheet" href="../css/tables.css?v=5">
+  <link rel="stylesheet" href="../css/chatbot.css?v=3">
+  <link rel="stylesheet" href="../css/responsive.css?v=3">
+</head>
+
+<body data-page-id="courses" data-page-title="Course Curriculum">
+
+  <div class="app-container">
+    <aside class="sidebar" id="sidebarContainer"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar" id="topNavbarContainer"></header>
+
+      <main class="page-content">
+        <div class="table-toolbar">
+          <div>
+            <h2 style="font-size:18px; font-weight:700; color:var(--text-primary);">Course Syllabus Directory</h2>
+            <p style="font-size:13px; color:var(--text-muted);">Manage subjects, course codes, credits, and faculty
+              allocations.</p>
+          </div>
+          <button class="btn btn-primary" id="addCourseBtn" onclick="openModal('addCourseModal')">
+            <i class="fas fa-plus"></i> Add Course
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Course ID</th>
+                <th>Subject Code</th>
+                <th>Course Title</th>
+                <th>Department</th>
+                <th>Semester</th>
+                <th>Credits</th>
+                <th>Faculty Lead</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="coursesTableBody">
+              <tr>
+                <td colspan="8" class="empty-state">
+                  <div class="spinner"></div> Loading courses...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Course Modal -->
+  <div class="modal-backdrop" id="addCourseModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Course</h3>
+        <button class="modal-close" onclick="closeModal('addCourseModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="addCourseForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Course Code <span class="required">*</span></label>
+              <input type="text" class="form-control" id="crsCode" required placeholder="e.g. CS302">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Course Title <span class="required">*</span></label>
+              <input type="text" class="form-control" id="crsName" required
+                placeholder="e.g. Full Stack Java Development">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Department <span class="required">*</span></label>
+              <select class="form-control" id="crsDept" required>
+                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Faculty Lead <span class="required">*</span></label>
+              <input type="text" class="form-control" id="crsFaculty" required placeholder="e.g. Prof. Sunita Patel">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Semester</label>
+              <input type="number" class="form-control" id="crsSem" min="1" max="8" value="5">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Academic Credits</label>
+              <input type="number" class="form-control" id="crsCredits" min="1" max="6" value="4">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addCourseModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="../js/api.js?v=5"></script>
+  <script src="../js/auth.js?v=5"></script>
+  <script src="../js/utils.js?v=5"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/app.js?v=5"></script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/courses.js"></script>
+</body>
+
+</html>

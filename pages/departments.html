@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Department Management - EduPortal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css?v=5">
+  <link rel="stylesheet" href="../css/forms.css?v=5">
+  <link rel="stylesheet" href="../css/tables.css?v=5">
+  <link rel="stylesheet" href="../css/chatbot.css?v=3">
+  <link rel="stylesheet" href="../css/responsive.css?v=3">
+</head>
+
+<body data-page-id="departments" data-page-title="Academic Departments">
+
+  <div class="app-container">
+    <aside class="sidebar" id="sidebarContainer"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar" id="topNavbarContainer"></header>
+
+      <main class="page-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+          <div>
+            <h2 style="font-size:18px; font-weight:700; color:var(--text-primary);">College Departments</h2>
+            <p style="font-size:13px; color:var(--text-muted);">Manage academic divisions, department heads, and faculty
+              allocations.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openModal('addDeptModal')">
+            <i class="fas fa-plus"></i> Add Department
+          </button>
+        </div>
+
+        <!-- Department Cards Grid -->
+        <div class="quick-actions-grid" id="deptContainer"
+          style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+          <div class="spinner"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Department Modal -->
+  <div class="modal-backdrop" id="addDeptModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Department</h3>
+        <button class="modal-close" onclick="closeModal('addDeptModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="addDeptForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Department Name <span class="required">*</span></label>
+            <input type="text" class="form-control" id="deptName" required placeholder="e.g. Civil Engineering">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Department Head (HOD) <span class="required">*</span></label>
+            <input type="text" class="form-control" id="deptHead" required placeholder="e.g. Dr. Anil Mehta">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Total Enrolled Students</label>
+              <input type="number" class="form-control" id="deptStudentsCount" value="100">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Total Faculty Staff</label>
+              <input type="number" class="form-control" id="deptFacultyCount" value="10">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addDeptModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Department</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="../js/api.js?v=5"></script>
+  <script src="../js/auth.js?v=5"></script>
+  <script src="../js/utils.js?v=5"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/app.js?v=5"></script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/departments.js"></script>
+</body>
+
+</html>

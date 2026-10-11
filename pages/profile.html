@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile - EduPortal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css?v=6">
+  <link rel="stylesheet" href="../css/forms.css?v=6">
+  <link rel="stylesheet" href="../css/tables.css?v=6">
+  <link rel="stylesheet" href="../css/chatbot.css?v=3">
+  <link rel="stylesheet" href="../css/responsive.css?v=3">
+</head>
+
+<body data-page-id="profile" data-page-title="User Account Profile">
+
+  <div class="app-container">
+    <aside class="sidebar" id="sidebarContainer"></aside>
+
+    <div class="main-wrapper">
+      <header class="top-navbar" id="topNavbarContainer"></header>
+
+      <main class="page-content">
+        <!-- User Profile Header Banner -->
+        <div class="profile-header-card" style="margin-bottom: 24px; padding: 24px; border-radius: 16px; background: var(--bg-secondary); border: 1px solid var(--border-color); display: flex; align-items: center; gap: 20px;">
+          <div class="profile-large-avatar" id="profileAvatarLetter" style="width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-color), var(--accent-2)); color: #fff; font-size: 32px; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px var(--shadow-glow);">D</div>
+          <div style="flex:1;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h2 style="font-size:24px; font-weight:800; color:var(--text-primary);" id="profileNameDisplay">Dr. Administrator</h2>
+                <div style="font-size:14px; color:var(--text-muted); margin-top:4px;" id="profileEmailDisplay">admin@college.edu</div>
+                <div style="margin-top: 8px;">
+                  <span class="badge badge-info" id="profileRoleBadge">Admin</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button class="btn btn-secondary btn-sm" onclick="openModal('editProfileModal')"><i class="fas fa-user-edit"></i> Edit Profile</button>
+                <button class="btn btn-primary btn-sm" onclick="openModal('changePasswordModal')"><i class="fas fa-key"></i> Change Password</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Column Profile Breakdown Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+          
+          <!-- Academic & Passout Details -->
+          <div class="card" style="padding: 20px;">
+            <h3 style="font-size:16px; font-weight:700; margin-bottom:16px; color:var(--text-primary); border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+              <i class="fas fa-graduation-cap" style="color:var(--primary-color); margin-right:8px;"></i> Educational Qualifications
+            </h3>
+            <div class="profile-details-grid" style="display:flex; flex-direction:column; gap:12px;">
+              <div class="detail-item">
+                <span class="detail-label" style="font-size:12px; color:var(--text-muted); display:block;">Passed Out From (University/College)</span>
+                <span class="detail-value" id="profilePassedOutDisplay" style="font-weight:600; color:var(--text-primary);">IIT Delhi (Graduated 2008)</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label" style="font-size:12px; color:var(--text-muted); display:block;">Degree & Specialization</span>
+                <span class="detail-value" id="profileQualificationDisplay" style="font-weight:600; color:var(--text-primary);">Ph.D. in Computer Science & AI</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label" style="font-size:12px; color:var(--text-muted); display:block;">Passing Year</span>
+                <span class="detail-value" id="profilePassingYearDisplay" style="font-weight:600; color:var(--text-primary);">2008</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Professional Experience Details -->
+          <div class="card" style="padding: 20px;">
+            <h3 style="font-size:16px; font-weight:700; margin-bottom:16px; color:var(--text-primary); border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+              <i class="fas fa-briefcase" style="color:var(--accent-color); margin-right:8px;"></i> Professional Experience
+            </h3>
+            <div class="profile-details-grid" style="display:flex; flex-direction:column; gap:12px;">
+              <div class="detail-item">
+                <span class="detail-label" style="font-size:12px; color:var(--text-muted); display:block;">Total Experience Years</span>
+                <span class="detail-value" id="profileExperienceDisplay" style="font-weight:600; color:var(--text-primary);">16 Years</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label" style="font-size:12px; color:var(--text-muted); display:block;">Domain Expertise</span>
+                <span class="detail-value" id="profileSpecializationDisplay" style="font-weight:600; color:var(--text-primary);">System Architecture & Data Security</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label" style="font-size:12px; color:var(--text-muted); display:block;">Previous Position / Institute</span>
+                <span class="detail-value" id="profilePreviousInstituteDisplay" style="font-weight:600; color:var(--text-primary);">Associate Dean, BITS Pilani</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Health & Medical Details -->
+          <div class="card" style="padding: 20px;">
+            <h3 style="font-size:16px; font-weight:700; margin-bottom:16px; color:var(--text-primary); border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+              <i class="fas fa-heartbeat" style="color:var(--accent-2); margin-right:8px;"></i> Health & Medical Record
+            </h3>
+            <div class="profile-details-grid" style="display:flex; flex-direction:column; gap:12px;">
+              <div class="detail-item">
+                <span class="detail-label" style="font-size:12px; color:var(--text-muted); display:block;">Known Medical Conditions / Diseases</span>
+                <span class="detail-value" id="profileMedicalDisplay" style="font-weight:600; color:var(--text-primary);">None (No Chronic Conditions)</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label" style="font-size:12px; color:var(--text-muted); display:block;">Blood Group</span>
+                <span class="detail-value" id="profileBloodGroupDisplay" style="font-weight:600; color:var(--text-primary);">O+ Positive</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label" style="font-size:12px; color:var(--text-muted); display:block;">Emergency Doctor Phone</span>
+                <span class="detail-value" id="profileDoctorContactDisplay" style="font-weight:600; color:var(--text-primary);">+91 98111-22334</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Edit Comprehensive Profile Modal -->
+  <div class="modal-backdrop" id="editProfileModal">
+    <div class="modal" style="max-width:540px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Complete Profile Details</h3>
+        <button class="modal-close" onclick="closeModal('editProfileModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="editProfileForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Display Name <span class="required">*</span></label>
+              <input type="text" class="form-control" id="editProfileName" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address <span class="required">*</span></label>
+              <input type="email" class="form-control" id="editProfileEmail" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Passed Out University / College</label>
+              <input type="text" class="form-control" id="editPassedOut" placeholder="e.g. IIT Delhi (2008)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Degree & Qualification</label>
+              <input type="text" class="form-control" id="editQualification" placeholder="e.g. Ph.D. in Computer Science">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Total Experience (Years)</label>
+              <input type="number" class="form-control" id="editExperience" min="0" max="50" placeholder="e.g. 15">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Blood Group</label>
+              <select class="form-control" id="editBloodGroup">
+                <option value="O+ Positive">O+ Positive</option>
+                <option value="A+ Positive">A+ Positive</option>
+                <option value="B+ Positive">B+ Positive</option>
+                <option value="AB+ Positive">AB+ Positive</option>
+                <option value="O- Negative">O- Negative</option>
+                <option value="A- Negative">A- Negative</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Health & Medical Conditions / Diseases</label>
+            <input type="text" class="form-control" id="editMedical" placeholder="e.g. None (Healthy) or Hypertension managed">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Emergency Doctor Phone Number</label>
+            <input type="text" class="form-control" id="editDoctorContact" placeholder="+91 98111-22334">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal-backdrop" id="changePasswordModal">
+    <div class="modal" style="max-width:440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Change Password</h3>
+        <button class="modal-close" onclick="closeModal('changePasswordModal')"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="changePasswordForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-control" id="currPassword" required placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-control" id="newPassword" required placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" class="form-control" id="confirmPassword" required placeholder="••••••••">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('changePasswordModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="../js/api.js?v=6"></script>
+  <script src="../js/auth.js?v=6"></script>
+  <script src="../js/utils.js?v=6"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/app.js?v=6"></script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/profile.js?v=6"></script>
+</body>
+
+</html>

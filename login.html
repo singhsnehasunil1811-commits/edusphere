@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Acadrix Student Management System</title>
+  <meta name="description" content="Sign in to Acadrix — Your smarter campus portal for students, faculty, and administrators.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/forms.css?v=4">
+  <link rel="stylesheet" href="css/auth.css?v=4">
+</head>
+
+<body class="login-body">
+  
+  <!-- 3D Background Elements -->
+  <i class="fas fa-graduation-cap bg-icon-1"></i>
+  <i class="fas fa-feather-alt bg-icon-2"></i>
+  <i class="fas fa-star bg-icon-3"></i>
+
+  <!-- Splash Screen -->
+  <div class="splash-screen" id="splashScreen">
+    <canvas id="splashCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;"></canvas>
+      <!-- Ultra 3D Logo Component -->
+      <div class="custom-logo-container">
+        <div class="logo-core">
+          <div class="logo-a">A</div>
+          <div class="orbit-ring ring-1"></div>
+          <div class="orbit-ring ring-2"></div>
+          <div class="orbit-ring ring-3"></div>
+          <i class="fas fa-graduation-cap logo-cap"></i>
+          <i class="fas fa-star sparkle s1"></i>
+          <i class="fas fa-star sparkle s2"></i>
+          <i class="fas fa-star sparkle s3"></i>
+        </div>
+      </div>
+      <h1 class="splash-title">ACADRIX</h1>
+      <div class="splash-tagline">SMARTER CAMPUS. BRIGHTER FUTURES.</div>
+      <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Main Login Card -->
+  <div class="auth-card" id="authCard">
+
+    <!-- Logo Header -->
+    <div class="auth-card-header" style="pointer-events: none;">
+      <div class="custom-logo-container" style="transform: scale(0.6); margin-bottom: -10px;">
+        <div class="logo-core">
+          <div class="logo-a">A</div>
+          <div class="orbit-ring ring-1"></div>
+          <div class="orbit-ring ring-2"></div>
+          <div class="orbit-ring ring-3"></div>
+          <i class="fas fa-graduation-cap logo-cap"></i>
+          <i class="fas fa-star sparkle s1"></i>
+          <i class="fas fa-star sparkle s2"></i>
+          <i class="fas fa-star sparkle s3"></i>
+        </div>
+      </div>
+      <h1 class="auth-brand">ACADRIX</h1>
+      <p class="auth-tagline">Smarter Campus. Brighter Futures.</p>
+    </div>
+
+    <!-- ─── ROLE TABS ─────────────────────────────── -->
+    <div class="role-tabs" id="roleTabs" role="tablist" aria-label="Select login role">
+      <button class="role-tab active" id="tab-Admin"    data-role="Admin"    role="tab" aria-selected="true"  aria-controls="loginPanel">
+        <i class="fas fa-shield-alt"></i> Admin
+      </button>
+      <button class="role-tab"        id="tab-Faculty"  data-role="Faculty"  role="tab" aria-selected="false" aria-controls="loginPanel">
+        <i class="fas fa-chalkboard-teacher"></i> Faculty
+      </button>
+      <button class="role-tab"        id="tab-Student"  data-role="Student"  role="tab" aria-selected="false" aria-controls="loginPanel">
+        <i class="fas fa-user-graduate"></i> Student
+      </button>
+    </div>
+
+    <!-- ─── ALERT BOX ─────────────────────────────── -->
+    <div class="auth-alert" id="loginAlert" role="alert" aria-live="polite" style="display:none;">
+      <i class="fas fa-exclamation-circle"></i>
+      <span id="loginAlertMsg"></span>
+    </div>
+    <div class="auth-alert auth-alert-success" id="loginSuccess" role="status" aria-live="polite" style="display:none;">
+      <i class="fas fa-check-circle"></i>
+      <span id="loginSuccessMsg"></span>
+    </div>
+
+    <!-- ─── LOGIN FORM ─────────────────────────────── -->
+    <form id="loginForm" novalidate autocomplete="on">
+      <input type="hidden" id="selectedRole" value="Admin">
+
+      <!-- Email / Username -->
+      <div class="form-group" id="fg-username">
+        <label class="form-label" for="loginUsername">
+          Email / Username <span class="required" aria-hidden="true">*</span>
+        </label>
+        <div class="input-icon-group">
+          <i class="fas fa-envelope" aria-hidden="true"></i>
+          <input
+            type="text"
+            class="form-control"
+            id="loginUsername"
+            placeholder="e.g. admin@college.edu"
+            required
+            autocomplete="username"
+            aria-describedby="username-error"
+          >
+        </div>
+        <span class="field-error" id="username-error" role="alert"></span>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group" id="fg-password">
+        <label class="form-label" for="loginPassword">
+          Password <span class="required" aria-hidden="true">*</span>
+        </label>
+        <div class="input-icon-group">
+          <i class="fas fa-lock" aria-hidden="true"></i>
+          <input
+            type="password"
+            class="form-control"
+            id="loginPassword"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+            aria-describedby="password-error"
+          >
+          <button
+            type="button"
+            class="pwd-toggle-btn"
+            id="togglePasswordBtn"
+            aria-label="Show password"
+            title="Toggle password visibility"
+            onclick="togglePwd('loginPassword', this)"
+          >
+            <i class="fas fa-eye" id="togglePasswordIcon" aria-hidden="true"></i>
+          </button>
+        </div>
+        <span class="field-error" id="password-error" role="alert"></span>
+      </div>
+
+      <!-- Remember Me + Forgot Password -->
+      <div class="auth-meta-row">
+        <label class="checkbox-group" for="rememberMe">
+          <input type="checkbox" id="rememberMe" name="rememberMe">
+          <span class="custom-checkbox" aria-hidden="true"></span>
+          <span>Remember me</span>
+        </label>
+        <button type="button" class="link-btn" id="forgotPasswordBtn" aria-haspopup="dialog">
+          Forgot Password?
+        </button>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary btn-full" id="loginSubmitBtn">
+        <span class="btn-text"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Sign In to Portal</span>
+        <span class="btn-spinner" style="display:none;" aria-hidden="true">
+          <span class="spinner-ring"></span> Signing in…
+        </span>
+      </button>
+    </form>
+
+    <!-- Demo Quick Fill -->
+    <div class="demo-section">
+      <span class="demo-label">Quick Demo Fill:</span>
+      <div class="demo-btns">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemo('admin@college.edu.in','admin123','Admin')">
+          <i class="fas fa-shield-alt"></i> Admin
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemo('faculty@college.edu.in','admin123','Faculty')">
+          <i class="fas fa-chalkboard-teacher"></i> Faculty
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemo('student@college.edu.in','admin123','Student')">
+          <i class="fas fa-user-graduate"></i> Student
+        </button>
+      </div>
+    </div>
+
+    <!-- Create Account -->
+    <div class="auth-footer-link">
+      Don't have an account?
+      <a href="signup.html" id="createAccountLink">
+        <i class="fas fa-user-plus"></i> Create Account / Request Access
+      </a>
+    </div>
+
+    <!-- Privacy & Terms -->
+    <div class="auth-legal">
+      By signing in you agree to our
+      <a href="pages/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+      &amp;
+      <a href="pages/terms.html" target="_blank" rel="noopener">Terms of Service</a>
+    </div>
+
+  </div><!-- /.auth-card -->
+
+
+  <!-- ═══════════════════════════════════════════════════
+       FORGOT PASSWORD MODAL
+  ════════════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="forgotPasswordModal" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+    <div class="modal" style="max-width:440px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="forgotTitle">
+          <i class="fas fa-key" style="color:var(--primary-color);margin-right:8px;"></i>Reset Password
+        </h2>
+        <button class="modal-close" onclick="closeModal('forgotPasswordModal')" aria-label="Close modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Step 1: Enter Email -->
+      <div id="forgotStep1">
+        <div class="modal-body">
+          <p class="modal-desc">Enter your registered institutional email to receive a one-time reset link.</p>
+          <div class="form-group" id="fg-resetEmail">
+            <label class="form-label" for="resetEmailInput">Email Address <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-envelope"></i>
+              <input type="email" class="form-control" id="resetEmailInput" placeholder="user@college.edu" autocomplete="email">
+            </div>
+            <span class="field-error" id="resetEmail-error" role="alert"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal('forgotPasswordModal')">Cancel</button>
+          <button class="btn btn-primary" id="sendResetBtn" onclick="handleResetStep1()">
+            <span class="btn-text"><i class="fas fa-paper-plane"></i> Send Reset Link</span>
+            <span class="btn-spinner" style="display:none;"><span class="spinner-ring"></span> Sending…</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Set New Password -->
+      <div id="forgotStep2" style="display:none;">
+        <div class="modal-body">
+          <div class="reset-success-icon">
+            <i class="fas fa-envelope-open-text"></i>
+          </div>
+          <p class="modal-desc" style="text-align:center;">
+            A reset link was sent to <strong id="resetSentTo"></strong>.<br>
+            For this demo, set your new password below:
+          </p>
+
+          <!-- New Password -->
+          <div class="form-group">
+            <label class="form-label" for="newPasswordInput">New Password <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" class="form-control" id="newPasswordInput" placeholder="Min. 8 characters" oninput="checkStrength(this,'resetStrength')">
+              <button type="button" class="pwd-toggle-btn" onclick="togglePwd('newPasswordInput',this)" aria-label="Toggle password visibility">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <!-- Password Strength Meter -->
+            <div class="strength-meter" id="resetStrength">
+              <div class="strength-bar-track">
+                <div class="strength-bar-fill" id="resetStrengthBar"></div>
+              </div>
+              <span class="strength-label" id="resetStrengthLabel"></span>
+            </div>
+            <span class="field-error" id="newPassword-error" role="alert"></span>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label class="form-label" for="confirmNewPasswordInput">Confirm Password <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-lock-open"></i>
+              <input type="password" class="form-control" id="confirmNewPasswordInput" placeholder="Re-enter password">
+              <button type="button" class="pwd-toggle-btn" onclick="togglePwd('confirmNewPasswordInput',this)" aria-label="Toggle password visibility">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <span class="field-error" id="confirmNewPassword-error" role="alert"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal('forgotPasswordModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="handleResetStep2()">
+            <i class="fas fa-check"></i> Update Password
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════
+       ACCOUNT APPROVAL STATUS MODAL
+  ════════════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="approvalModal" role="dialog" aria-modal="true" aria-labelledby="approvalTitle">
+    <div class="modal" style="max-width:400px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="approvalTitle">
+          <i class="fas fa-clock" style="color:var(--warning-color);margin-right:8px;"></i>Account Pending
+        </h2>
+        <button class="modal-close" onclick="closeModal('approvalModal')" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align:center;padding:32px 24px;">
+        <div class="approval-icon pending" id="approvalIcon">
+          <i class="fas fa-hourglass-half"></i>
+        </div>
+        <h3 id="approvalStatusTitle" style="margin:16px 0 8px;font-size:18px;">Awaiting Admin Approval</h3>
+        <p id="approvalStatusDesc" style="color:var(--text-muted);font-size:13px;line-height:1.6;">
+          Your account is under review. You'll receive an email once approved.<br>
+          Account approvals typically take 1–2 business days.
+        </p>
+        <div class="approval-steps" id="approvalSteps" style="margin-top:24px;text-align:left;">
+          <div class="approval-step done">
+            <i class="fas fa-check-circle"></i>
+            <span>Account Created</span>
+          </div>
+          <div class="approval-step done">
+            <i class="fas fa-check-circle"></i>
+            <span>Email Verified</span>
+          </div>
+          <div class="approval-step pending-step">
+            <i class="fas fa-hourglass-half"></i>
+            <span>Admin Approval (Pending)</span>
+          </div>
+          <div class="approval-step">
+            <i class="fas fa-circle"></i>
+            <span>Access Granted</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('approvalModal')">Close</button>
+        <button class="btn btn-primary" onclick="resendVerification()">
+          <i class="fas fa-redo"></i> Resend Verification
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════
+       PARTICLE CANVAS SCRIPT
+  ════════════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      const canvas = document.getElementById('splashCanvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, animId, particles = [];
+      function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+      resize();
+      window.addEventListener('resize', resize);
+      const colors = ['#8b5cf6', '#06b6d4', '#ec4899', '#10b981', '#f59e0b'];
+      for (let i = 0; i < 120; i++) {
+        particles.push({ x: Math.random() * 2000 - 1000, y: Math.random() * 2000 - 1000, z: Math.random() * 1500, r: Math.random() * 2.5 + 0.5, color: colors[Math.floor(Math.random() * colors.length)], speed: Math.random() * 3 + 1 });
+      }
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        const cx = W / 2, cy = H / 2;
+        particles.forEach(p => {
+          p.z -= p.speed;
+          if (p.z <= 0) { p.z = 1500; p.x = Math.random() * 2000 - 1000; p.y = Math.random() * 2000 - 1000; }
+          const scale = 600 / p.z, sx = cx + p.x * scale, sy = cy + p.y * scale, sr = Math.max(0.3, p.r * scale);
+          ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+          ctx.fillStyle = p.color; ctx.globalAlpha = Math.min(1, (1500 - p.z) / 800) * 0.8; ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        animId = requestAnimationFrame(draw);
+      }
+      draw();
+      setTimeout(() => { cancelAnimationFrame(animId); const s = document.getElementById('splashScreen'); if (s) s.style.display = 'none'; }, 3600);
+    })();
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════
+       SCRIPTS
+  ════════════════════════════════════════════════════ -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/utils.js"></script>
+
+  <script>
+    /* ── Helpers ── */
+    function $(id) { return document.getElementById(id); }
+
+    function showToast(msg, type = 'info', duration = 4000) {
+      const tc = $('toastContainer') || (() => { const d = document.createElement('div'); d.id = 'toastContainer'; d.className = 'toast-container'; document.body.appendChild(d); return d; })();
+      const iconMap = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+      const t = document.createElement('div');
+      t.className = `toast toast-${type}`;
+      t.innerHTML = `<i class="fas ${iconMap[type] || 'fa-info-circle'}"></i><span>${msg}</span>`;
+      tc.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(100%)'; setTimeout(() => t.remove(), 350); }, duration);
+    }
+
+    function openModal(id) {
+      const el = $(id); if (el) { el.classList.add('active'); el.focus && el.focus(); }
+    }
+    function closeModal(id) {
+      const el = $(id); if (el) el.classList.remove('active');
+    }
+
+    function setFieldError(inputId, errId, msg) {
+      const inp = $(inputId), err = $(errId);
+      if (inp) inp.classList.toggle('is-invalid', !!msg);
+      if (err) { err.textContent = msg; err.style.display = msg ? 'block' : 'none'; }
+    }
+
+    function clearFieldError(inputId, errId) { setFieldError(inputId, errId, ''); }
+
+    function setBtnLoading(btnId, loading) {
+      const btn = $(btnId);
+      if (!btn) return;
+      btn.disabled = loading;
+      const text = btn.querySelector('.btn-text');
+      const spin = btn.querySelector('.btn-spinner');
+      if (text) text.style.display = loading ? 'none' : '';
+      if (spin) spin.style.display = loading ? 'inline-flex' : 'none';
+    }
+
+    /* ── Password Toggle ── */
+    function togglePwd(inputId, btn) {
+      const inp = document.getElementById(inputId);
+      if (!inp) return;
+      const isPass = inp.type === 'password';
+      inp.type = isPass ? 'text' : 'password';
+      const icon = (btn && btn.querySelector('i')) || document.getElementById(inputId + 'Icon') || document.getElementById('togglePasswordIcon');
+      if (icon) {
+        icon.className = isPass ? 'fas fa-eye-slash' : 'fas fa-eye';
+      }
+      if (btn) {
+        btn.setAttribute('aria-label', isPass ? 'Hide password' : 'Show password');
+      }
+    }
+    window.togglePwd = togglePwd;
+
+    const tBtn = document.getElementById('togglePasswordBtn');
+    if (tBtn) {
+      tBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        togglePwd('loginPassword', this);
+      });
+    }
+
+    /* ── Password Strength ── */
+    function checkStrength(input, meterId) {
+      const val = input.value;
+      const bar = $(meterId + 'Bar');
+      const label = $(meterId + 'Label');
+      if (!bar || !label) return;
+      const meter = $(meterId);
+      if (!val) { meter.style.display = 'none'; return; }
+      meter.style.display = 'block';
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      if (val.length >= 12) score++;
+      const levels = [
+        { pct: '20%', color: '#ef4444', text: 'Very Weak' },
+        { pct: '40%', color: '#f97316', text: 'Weak' },
+        { pct: '60%', color: '#f59e0b', text: 'Fair' },
+        { pct: '80%', color: '#10b981', text: 'Strong' },
+        { pct: '100%', color: '#06b6d4', text: 'Very Strong' }
+      ];
+      const lv = levels[Math.min(score, 4)];
+      bar.style.width = lv.pct;
+      bar.style.background = lv.color;
+      label.textContent = lv.text;
+      label.style.color = lv.color;
+    }
+
+    /* ── Role Tabs ── */
+    let currentRole = 'Admin';
+    document.querySelectorAll('.role-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.role-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        currentRole = tab.dataset.role;
+        $('selectedRole').value = currentRole;
+        // Update placeholder hint
+        const placeholderMap = {
+          Admin: 'e.g. admin@college.edu',
+          Faculty: 'e.g. faculty@college.edu',
+          Student: 'e.g. student@college.edu'
+        };
+        $('loginUsername').placeholder = placeholderMap[currentRole] || 'Email / Username';
+      });
+    });
+
+    /* ── Remember Me ── */
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('edu_remembered');
+      if (saved) {
+        try {
+          const d = JSON.parse(saved);
+          if (d.username) $('loginUsername').value = d.username;
+          if (d.role) {
+            const tab = document.querySelector(`.role-tab[data-role="${d.role}"]`);
+            if (tab) tab.click();
+          }
+          $('rememberMe').checked = true;
+        } catch {}
+      }
+    });
+
+    /* ── Real-time Validation ── */
+    $('loginUsername').addEventListener('blur', () => {
+      const val = $('loginUsername').value.trim();
+      if (!val) setFieldError('loginUsername', 'username-error', 'Email or username is required.');
+      else clearFieldError('loginUsername', 'username-error');
+    });
+    $('loginUsername').addEventListener('input', () => clearFieldError('loginUsername', 'username-error'));
+    $('loginPassword').addEventListener('blur', () => {
+      const val = $('loginPassword').value;
+      if (!val) setFieldError('loginPassword', 'password-error', 'Password is required.');
+      else clearFieldError('loginPassword', 'password-error');
+    });
+    $('loginPassword').addEventListener('input', () => clearFieldError('loginPassword', 'password-error'));
+
+    /* ── Known Users for display names ── */
+    const KNOWN_USERS = {
+      "admin@college.edu.in": "Dr. Administrator", "admin@college.edu": "Dr. Administrator", "admin": "Dr. Administrator",
+      "faculty@college.edu.in": "Prof. Sunita Patel", "faculty@college.edu": "Prof. Sunita Patel", "faculty": "Prof. Sunita Patel",
+      "student@college.edu.in": "Aarav Sharma", "student@college.edu": "Aarav Sharma", "student": "Aarav Sharma"
+    };
+
+    /* ── Login Form Submit ── */
+    $('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = $('loginUsername').value.trim();
+      const password = $('loginPassword').value.trim();
+      const role = $('selectedRole').value;
+
+      // Validation
+      let hasError = false;
+      if (!username) { setFieldError('loginUsername', 'username-error', 'Email or username is required.'); hasError = true; }
+      if (!password) { setFieldError('loginPassword', 'password-error', 'Password is required.'); hasError = true; }
+      if (hasError) return;
+
+      // Hide previous alerts
+      $('loginAlert').style.display = 'none';
+      $('loginSuccess').style.display = 'none';
+
+      setBtnLoading('loginSubmitBtn', true);
+
+      // Simulate network delay + auth
+      await new Promise(r => setTimeout(r, 1000));
+
+      const result = await auth.login(username, password, role);
+
+      setBtnLoading('loginSubmitBtn', false);
+
+      if (result.success) {
+        // Remember Me
+        if ($('rememberMe').checked) {
+          localStorage.setItem('edu_remembered', JSON.stringify({ username, role }));
+        } else {
+          localStorage.removeItem('edu_remembered');
+        }
+
+        // Enrich user data
+        const savedUser = JSON.parse(localStorage.getItem('edu_user') || '{}');
+        const defaultName = KNOWN_USERS[username.toLowerCase()] || 'User';
+        savedUser.name = savedUser.name || defaultName;
+        const students = JSON.parse(localStorage.getItem('edu_students') || '[]');
+        const faculty  = JSON.parse(localStorage.getItem('edu_faculty') || '[]');
+        const emailLow = username.toLowerCase();
+        const sm = students.find(s => s.email && s.email.toLowerCase() === emailLow);
+        const fm = faculty.find(f => f.email && f.email.toLowerCase() === emailLow);
+        if (sm) { savedUser.name = sm.name || defaultName; savedUser.studentId = sm.studentId; savedUser.department = sm.department; savedUser.email = sm.email; }
+        else if (fm) { savedUser.name = fm.name || defaultName; savedUser.department = fm.department; savedUser.email = fm.email; }
+        localStorage.setItem('edu_user', JSON.stringify(savedUser));
+
+        $('loginSuccess').style.display = 'flex';
+        $('loginSuccessMsg').textContent = `Welcome back, ${savedUser.name}! Redirecting…`;
+
+        setTimeout(() => { window.location.href = 'pages/dashboard.html'; }, 900);
+      } else {
+        // Check if pending approval
+        if (result.message && result.message.toLowerCase().includes('pending')) {
+          openModal('approvalModal');
+        } else {
+          $('loginAlert').style.display = 'flex';
+          $('loginAlertMsg').textContent = result.message || 'Invalid credentials. Please try again.';
+          // Shake the card
+          const card = $('authCard');
+          card.classList.add('shake');
+          setTimeout(() => card.classList.remove('shake'), 500);
+        }
+      }
+    });
+
+    /* ── Quick Demo Fill ── */
+    function fillDemo(u, p, r) {
+      $('loginUsername').value = u;
+      $('loginPassword').value = p;
+      const tab = document.querySelector(`.role-tab[data-role="${r}"]`);
+      if (tab) tab.click();
+      clearFieldError('loginUsername', 'username-error');
+      clearFieldError('loginPassword', 'password-error');
+      $('loginAlert').style.display = 'none';
+    }
+
+    /* ── Forgot Password ── */
+    $('forgotPasswordBtn').addEventListener('click', () => {
+      $('forgotStep1').style.display = '';
+      $('forgotStep2').style.display = 'none';
+      setFieldError('resetEmailInput', 'resetEmail-error', '');
+      openModal('forgotPasswordModal');
+    });
+
+    function handleResetStep1() {
+      const email = $('resetEmailInput').value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setFieldError('resetEmailInput', 'resetEmail-error', 'Please enter a valid email address.');
+        return;
+      }
+      setBtnLoading('sendResetBtn', true);
+      setTimeout(() => {
+        setBtnLoading('sendResetBtn', false);
+        $('forgotStep1').style.display = 'none';
+        $('forgotStep2').style.display = '';
+        $('resetSentTo').textContent = email;
+        $('resetStrength').style.display = 'none';
+      }, 1200);
+    }
+
+    function handleResetStep2() {
+      const np = $('newPasswordInput').value;
+      const cp = $('confirmNewPasswordInput').value;
+      let ok = true;
+      if (!np || np.length < 8) { setFieldError('newPasswordInput', 'newPassword-error', 'Password must be at least 8 characters.'); ok = false; }
+      else clearFieldError('newPasswordInput', 'newPassword-error');
+      if (np !== cp) { setFieldError('confirmNewPasswordInput', 'confirmNewPassword-error', 'Passwords do not match.'); ok = false; }
+      else clearFieldError('confirmNewPasswordInput', 'confirmNewPassword-error');
+      if (!ok) return;
+      closeModal('forgotPasswordModal');
+      showToast('Password updated successfully! Please sign in.', 'success');
+    }
+
+    function resendVerification() {
+      closeModal('approvalModal');
+      showToast('Verification email resent. Please check your inbox.', 'info');
+    }
+
+    /* ── Close modal on backdrop click ── */
+    document.querySelectorAll('.modal-backdrop').forEach(bd => {
+      bd.addEventListener('click', (e) => { if (e.target === bd) bd.classList.remove('active'); });
+    });
+  </script>
+
+</body>
+</html>

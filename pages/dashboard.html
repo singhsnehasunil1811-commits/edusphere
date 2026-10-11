@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - EduPortal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css?v=5">
+  <link rel="stylesheet" href="../css/dashboard.css?v=5">
+  <link rel="stylesheet" href="../css/forms.css?v=5">
+  <link rel="stylesheet" href="../css/tables.css?v=5">
+  <link rel="stylesheet" href="../css/chatbot.css?v=3">
+  <link rel="stylesheet" href="../css/responsive.css?v=3">
+</head>
+
+<body data-page-id="dashboard" data-page-title="Dashboard Overview">
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebarContainer"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Navbar -->
+      <header class="top-navbar" id="topNavbarContainer"></header>
+
+      <main class="page-content">
+        <!-- Role-based content injected by dashboard.js -->
+        <div id="dashboardContent">
+          <div style="display:flex;align-items:center;justify-content:center;height:200px;">
+            <div class="spinner" style="width:40px;height:40px;border-width:4px;"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="../js/api.js?v=5"></script>
+  <script src="../js/auth.js?v=5"></script>
+  <script src="../js/utils.js?v=5"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/app.js?v=5"></script>
+  <script src="../js/chatbot.js"></script>
+  <script src="../js/dashboard.js?v=5"></script>
+</body>
+
+</html>

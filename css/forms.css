@@ -1,0 +1,374 @@
+/* 
+  Forms & Input Controls Styling
+  Form groups, Floating labels, Custom Select, Validation states, Login Card
+*/
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.form-label .required {
+  color: var(--danger-color);
+  margin-left: 2px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2094a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.input-icon-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon-group i {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.input-icon-group .form-control {
+  padding-left: 42px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  color: var(--text-muted);
+  padding: 4px;
+  cursor: pointer;
+}
+
+.password-toggle-btn:hover {
+  color: var(--text-primary);
+}
+
+.form-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.form-error {
+  font-size: 12px;
+  color: var(--danger-color);
+  margin-top: 2px;
+  display: none;
+}
+
+.form-control.is-invalid {
+  border-color: var(--danger-color);
+}
+
+.form-control.is-invalid+.form-error {
+  display: block;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+}
+
+/* Login Page Specific Styling */
+.login-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 50%, #151a30 0%, #080a12 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Starry background effect */
+.login-body::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px),
+    radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px),
+    radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 4px);
+  background-size: 550px 550px, 350px 350px, 250px 250px;
+  background-position: 0 0, 40px 60px, 130px 270px;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: rgba(13, 17, 23, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.15), inset 0 0 0 1px rgba(255,255,255,0.05);
+  padding: 40px 32px;
+  border: 1px solid rgba(255,255,255,0.1);
+  z-index: 1;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.acadrix-logo-icon {
+  font-size: 54px;
+  font-weight: 800;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  margin-bottom: 10px;
+  position: relative;
+  animation: float 3s ease-in-out infinite;
+}
+
+.acadrix-logo-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 130%; height: 50%;
+  border: 2px solid rgba(139, 92, 246, 0.7);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+  pointer-events: none;
+}
+
+.login-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.login-header p {
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Splash Screen */
+.splash-screen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #04050a;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: splashFade 3.8s forwards;
+  pointer-events: none;
+  perspective: 800px;
+}
+
+.splash-content {
+  text-align: center;
+  position: relative;
+  animation: zoom3D 1.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-style: preserve-3d;
+}
+
+/* 3D Orbit Rings */
+.splash-orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  top: 50%; left: 50%;
+  pointer-events: none;
+}
+
+.ring-1 {
+  width: 220px; height: 80px;
+  margin: -40px 0 0 -110px;
+  border-color: rgba(139, 92, 246, 0.7);
+  box-shadow: 0 0 20px rgba(139,92,246,0.4), inset 0 0 20px rgba(139,92,246,0.1);
+  animation: orbit1 3s linear infinite;
+  transform: rotateX(70deg);
+}
+
+.ring-2 {
+  width: 280px; height: 100px;
+  margin: -50px 0 0 -140px;
+  border-color: rgba(6, 182, 212, 0.5);
+  box-shadow: 0 0 20px rgba(6,182,212,0.3);
+  animation: orbit2 4s linear infinite;
+  transform: rotateX(75deg) rotateZ(60deg);
+}
+
+.ring-3 {
+  width: 180px; height: 70px;
+  margin: -35px 0 0 -90px;
+  border-color: rgba(236, 72, 153, 0.5);
+  box-shadow: 0 0 16px rgba(236,72,153,0.3);
+  animation: orbit3 2.5s linear infinite reverse;
+  transform: rotateX(70deg) rotateZ(30deg);
+}
+
+.splash-logo {
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.8)) drop-shadow(0 0 60px rgba(6,182,212,0.4));
+  animation: float 3s ease-in-out infinite, glow-pulse 2s ease-in-out infinite !important;
+}
+
+.splash-title {
+  font-size: 72px;
+  font-weight: 800;
+  letter-spacing: 8px;
+  background: linear-gradient(90deg, #06b6d4, #8b5cf6, #ec4899, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.8));
+  margin: 0;
+  animation: titleIn 1s 0.4s both;
+}
+
+.splash-tagline {
+  color: #94a3b8;
+  letter-spacing: 4px;
+  font-size: 13px;
+  margin-top: 14px;
+  animation: titleIn 1s 0.7s both;
+}
+
+.splash-bar {
+  width: 200px;
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 9999px;
+  margin: 24px auto 0;
+  overflow: hidden;
+  animation: titleIn 0.5s 1s both;
+}
+
+.splash-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #8b5cf6, #06b6d4, #ec4899);
+  animation: barFill 2.5s 1s ease-out forwards;
+  box-shadow: 0 0 10px rgba(139,92,246,0.8);
+}
+
+@keyframes orbit1 {
+  from { transform: rotateX(70deg) rotateZ(0deg); }
+  to   { transform: rotateX(70deg) rotateZ(360deg); }
+}
+
+@keyframes orbit2 {
+  from { transform: rotateX(75deg) rotateZ(60deg); }
+  to   { transform: rotateX(75deg) rotateZ(420deg); }
+}
+
+@keyframes orbit3 {
+  from { transform: rotateX(70deg) rotateZ(30deg); }
+  to   { transform: rotateX(70deg) rotateZ(390deg); }
+}
+
+@keyframes barFill {
+  0% { width: 0%; }
+  80% { width: 95%; }
+  100% { width: 100%; }
+}
+
+@keyframes titleIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 30px rgba(139,92,246,0.8)) drop-shadow(0 0 60px rgba(6,182,212,0.4)); }
+  50%       { filter: drop-shadow(0 0 50px rgba(139,92,246,1))   drop-shadow(0 0 100px rgba(6,182,212,0.7)); }
+}
+
+@keyframes splashFade {
+  0%, 75% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; z-index: -100; }
+}
+
+@keyframes zoom3D {
+  0%   { transform: scale(0.3) rotateX(60deg) rotateY(-30deg) translateZ(-200px); opacity: 0; }
+  60%  { transform: scale(1.05) rotateX(0) rotateY(0) translateZ(0); opacity: 1; }
+  100% { transform: scale(1) rotateX(0) rotateY(0) translateZ(0); opacity: 1; }
+}
+
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}

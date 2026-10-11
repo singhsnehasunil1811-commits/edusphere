@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduPortal - Student Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #060d1f; overflow: hidden; height: 100vh; width: 100vw; }
+
+    #starfield { position: fixed; inset: 0; z-index: 0; }
+
+    #loader {
+      position: fixed; inset: 0; z-index: 10;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+
+    /* 3D Cube */
+    .scene { width: 100px; height: 100px; perspective: 600px; margin-bottom: 40px; }
+    .cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: rotateCube 3s linear infinite; }
+    .cube-face {
+      position: absolute; width: 100px; height: 100px;
+      border: 2px solid rgba(100, 180, 255, 0.45);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px; font-weight: 900; color: rgba(255,255,255,0.85);
+    }
+    .cube-face.front  { background: rgba(37, 99, 235, 0.22);  transform: translateZ(50px); }
+    .cube-face.back   { background: rgba(6, 182, 212, 0.18);  transform: rotateY(180deg) translateZ(50px); }
+    .cube-face.left   { background: rgba(124, 58, 237, 0.18); transform: rotateY(-90deg) translateZ(50px); }
+    .cube-face.right  { background: rgba(16, 185, 129, 0.18); transform: rotateY(90deg)  translateZ(50px); }
+    .cube-face.top    { background: rgba(245, 158, 11, 0.14); transform: rotateX(90deg)  translateZ(50px); }
+    .cube-face.bottom { background: rgba(239, 68, 68, 0.14);  transform: rotateX(-90deg) translateZ(50px); }
+    @keyframes rotateCube { 100% { transform: rotateX(360deg) rotateY(360deg); } }
+
+    /* Brand */
+    .brand-title {
+      font-size: 36px; font-weight: 900;
+      background: linear-gradient(135deg, #60a5fa 0%, #06b6d4 50%, #a78bfa 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: shimmer 2s ease infinite alternate; margin-bottom: 6px;
+    }
+    @keyframes shimmer { from { filter: brightness(1); } to { filter: brightness(1.35); } }
+    .brand-sub { font-size: 13px; color: rgba(148,163,184,0.8); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 50px; }
+
+    /* Progress */
+    .prog-wrap { width: 320px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .prog-row   { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .prog-track { width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; }
+    .prog-fill  {
+      height: 100%; width: 0%; border-radius: 99px;
+      background: linear-gradient(90deg, #2563eb, #06b6d4, #7c3aed);
+      background-size: 200% 100%; animation: gMove 1.5s linear infinite;
+      box-shadow: 0 0 14px rgba(37,99,235,0.75); transition: width 0.08s linear;
+    }
+    @keyframes gMove { 0%{ background-position:0% 50%; } 100%{ background-position:200% 50%; } }
+    .stat-txt  { font-size: 12px; color: rgba(100,116,139,0.9); }
+    .pct-txt   { font-size: 16px; font-weight: 700; color: #60a5fa; font-variant-numeric: tabular-nums; }
+
+    /* Orbs */
+    .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.13; pointer-events: none; z-index: 1; }
+    .orb-a { width:500px; height:500px; background:#2563eb; top:-200px;  left:-150px; animation: floatO 8s ease-in-out infinite; }
+    .orb-b { width:400px; height:400px; background:#7c3aed; bottom:-180px; right:-120px; animation: floatO 10s ease-in-out infinite reverse; }
+    .orb-c { width:300px; height:300px; background:#06b6d4; top:50%; left:60%; animation: floatO 7s ease-in-out infinite 2s; }
+    @keyframes floatO { 0%,100%{ transform:translateY(0) scale(1); } 50%{ transform:translateY(-30px) scale(1.05); } }
+
+    /* Fade out */
+    #loader.fade-out { animation: fadeOut 0.7s ease forwards; }
+    @keyframes fadeOut { from{opacity:1;} to{opacity:0;visibility:hidden;} }
+  </style>
+</head>
+
+<body>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+  <canvas id="starfield"></canvas>
+
+  <div id="loader">
+    <div class="scene">
+      <div class="cube">
+        <div class="cube-face front">E</div>
+        <div class="cube-face back">P</div>
+        <div class="cube-face left">🎓</div>
+        <div class="cube-face right">📚</div>
+        <div class="cube-face top">✦</div>
+        <div class="cube-face bottom">✦</div>
+      </div>
+    </div>
+    <div class="brand-title">EduPortal</div>
+    <div class="brand-sub">Student Management System</div>
+    <div class="prog-wrap">
+      <div class="prog-row">
+        <span class="stat-txt" id="statTxt">Initializing system...</span>
+        <span class="pct-txt"  id="pctTxt">0%</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="progFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Starfield */
+    (function(){
+      const cv = document.getElementById('starfield');
+      const cx = cv.getContext('2d');
+      let stars = [];
+      function resize(){ cv.width = innerWidth; cv.height = innerHeight; }
+      function mkStars(n){ stars=[]; for(let i=0;i<n;i++) stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.4+0.2,a:Math.random(),ts:Math.random()*0.02+0.005,sp:Math.random()*0.15+0.05}); }
+      function draw(){
+        cx.clearRect(0,0,cv.width,cv.height);
+        stars.forEach(s=>{
+          s.a+=s.ts; if(s.a>1||s.a<0) s.ts*=-1;
+          cx.beginPath(); cx.arc(s.x,s.y,s.r,0,Math.PI*2);
+          cx.fillStyle=`rgba(200,220,255,${Math.abs(Math.sin(s.a))})`; cx.fill();
+          s.y-=s.sp*0.08; if(s.y<0){s.y=cv.height;s.x=Math.random()*cv.width;}
+        });
+        requestAnimationFrame(draw);
+      }
+      window.addEventListener('resize',()=>{resize();mkStars(180);});
+      resize(); mkStars(180); draw();
+    })();
+
+    /* Progress */
+    const msgs=[
+      {p:0,  m:"Initializing system..."},
+      {p:15, m:"Loading core modules..."},
+      {p:35, m:"Setting up database..."},
+      {p:55, m:"Configuring authentication..."},
+      {p:70, m:"Loading user interface..."},
+      {p:85, m:"Finalizing setup..."},
+      {p:95, m:"Almost ready..."},
+      {p:100,m:"Welcome to EduPortal!"}
+    ];
+    const fill=document.getElementById('progFill');
+    const pctE=document.getElementById('pctTxt');
+    const stE =document.getElementById('statTxt');
+    let cur=0, lastMsg=-1;
+    const DUR=2700, T0=performance.now();
+    function ease(t){ return t<0.5?2*t*t:-1+(4-2*t)*t; }
+    function tick(now){
+      const t=Math.min((now-T0)/DUR,1);
+      const tgt=Math.round(ease(t)*100);
+      if(cur<tgt) cur=Math.min(cur+1,tgt);
+      fill.style.width=cur+'%';
+      pctE.textContent=cur+'%';
+      for(let i=msgs.length-1;i>=0;i--){ if(cur>=msgs[i].p && i!==lastMsg){ lastMsg=i; stE.textContent=msgs[i].m; break; } }
+      if(t<1||cur<100){ requestAnimationFrame(tick); } else { setTimeout(done,400); }
+    }
+    requestAnimationFrame(tick);
+    function done(){
+      document.getElementById('loader').classList.add('fade-out');
+      setTimeout(()=>{
+        const u=localStorage.getItem("edu_user");
+        window.location.href = u ? "pages/dashboard.html" : "login.html";
+      },700);
+    }
+  </script>
+</body>
+
+</html>

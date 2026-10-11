@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — Acadrix Student Management System</title>
+  <meta name="description" content="Request access to Acadrix — Create your student, faculty, or admin account.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/forms.css?v=4">
+  <link rel="stylesheet" href="css/auth.css?v=4">
+</head>
+
+<body class="login-body">
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Signup Card -->
+  <div class="auth-card" id="authCard" style="max-width:500px;">
+
+    <div class="auth-card-header">
+      <div class="acadrix-logo-icon">A</div>
+      <h1 class="auth-brand">ACADRIX</h1>
+      <p class="auth-tagline">Request Access / Create Account</p>
+    </div>
+
+    <!-- Multi-step progress -->
+    <div class="signup-steps">
+      <div class="step-item active" id="step-dot-1">
+        <div class="step-dot"><span>1</span></div>
+        <div class="step-label">Identity</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item" id="step-dot-2">
+        <div class="step-dot"><span>2</span></div>
+        <div class="step-label">Security</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item" id="step-dot-3">
+        <div class="step-dot"><span>3</span></div>
+        <div class="step-label">Review</div>
+      </div>
+    </div>
+
+    <!-- Alert Box -->
+    <div class="auth-alert" id="signupAlert" role="alert" aria-live="polite" style="display:none;">
+      <i class="fas fa-exclamation-circle"></i>
+      <span id="signupAlertMsg"></span>
+    </div>
+    <div class="auth-alert auth-alert-success" id="signupSuccess" role="status" aria-live="polite" style="display:none;">
+      <i class="fas fa-check-circle"></i>
+      <span id="signupSuccessMsg"></span>
+    </div>
+
+    <!-- ──────────────────── STEP 1: IDENTITY ──────────────────── -->
+    <div id="signupStep1">
+      <form id="step1Form" novalidate>
+
+        <!-- Full Name -->
+        <div class="form-group">
+          <label class="form-label" for="signupName">Full Name <span class="required">*</span></label>
+          <div class="input-icon-group">
+            <i class="fas fa-user"></i>
+            <input type="text" class="form-control" id="signupName" placeholder="e.g. Jane Doe" required autocomplete="name">
+          </div>
+          <span class="field-error" id="name-error" role="alert"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="signupEmail">Institutional Email <span class="required">*</span></label>
+          <div class="input-icon-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" class="form-control" id="signupEmail" placeholder="user@college.edu.in" required autocomplete="email">
+            <span class="field-status-icon" id="emailStatusIcon" style="right:12px;position:absolute;"></span>
+          </div>
+          <span class="field-error" id="email-error" role="alert"></span>
+          <span class="form-hint">Must be a @college.edu.in address</span>
+        </div>
+
+        <!-- Role -->
+        <div class="form-group">
+          <label class="form-label" for="signupRole">Select Role <span class="required">*</span></label>
+          <div class="input-icon-group">
+            <i class="fas fa-user-tag"></i>
+            <select class="form-control" id="signupRole" required style="padding-left:42px;">
+              <option value="" disabled selected>Choose your role…</option>
+              <option value="Student">🎓 Student</option>
+              <option value="Faculty">📚 Faculty</option>
+              <option value="Admin">🛡️ Admin</option>
+            </select>
+          </div>
+          <span class="field-error" id="role-error" role="alert"></span>
+        </div>
+
+        <!-- Department (conditional) -->
+        <div class="form-group" id="deptGroup" style="display:none;">
+          <label class="form-label" for="signupDept">Department</label>
+          <div class="input-icon-group">
+            <i class="fas fa-building"></i>
+            <select class="form-control" id="signupDept" style="padding-left:42px;">
+              <option value="">Select department…</option>
+              <option>Computer Science</option>
+              <option>Information Technology</option>
+              <option>Electronics & Communication</option>
+              <option>Mechanical Engineering</option>
+              <option>Civil Engineering</option>
+              <option>Business Administration</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full" id="step1NextBtn">
+          <span class="btn-text">Next: Security <i class="fas fa-arrow-right"></i></span>
+          <span class="btn-spinner" style="display:none;"><span class="spinner-ring"></span> Checking…</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- ──────────────────── STEP 2: SECURITY ──────────────────── -->
+    <div id="signupStep2" style="display:none;">
+      <form id="step2Form" novalidate>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="signupPassword">Create Password <span class="required">*</span></label>
+          <div class="input-icon-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" class="form-control" id="signupPassword" placeholder="Min. 8 characters" required autocomplete="new-password"
+              oninput="checkStrength(this,'signupStrength')">
+            <button type="button" class="pwd-toggle-btn" onclick="togglePwd('signupPassword',this)" aria-label="Toggle password visibility">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <!-- Strength Meter -->
+          <div class="strength-meter" id="signupStrength" style="display:none;">
+            <div class="strength-bar-track">
+              <div class="strength-bar-fill" id="signupStrengthBar"></div>
+            </div>
+            <span class="strength-label" id="signupStrengthLabel"></span>
+          </div>
+          <!-- Requirements checklist -->
+          <ul class="pwd-requirements">
+            <li id="req-length"><i class="fas fa-circle"></i> At least 8 characters</li>
+            <li id="req-upper"><i class="fas fa-circle"></i> One uppercase letter</li>
+            <li id="req-number"><i class="fas fa-circle"></i> One number</li>
+            <li id="req-special"><i class="fas fa-circle"></i> One special character</li>
+          </ul>
+          <span class="field-error" id="signupPassword-error" role="alert"></span>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label class="form-label" for="signupConfirmPassword">Confirm Password <span class="required">*</span></label>
+          <div class="input-icon-group">
+            <i class="fas fa-lock-open"></i>
+            <input type="password" class="form-control" id="signupConfirmPassword" placeholder="Re-enter your password" required autocomplete="new-password">
+            <button type="button" class="pwd-toggle-btn" onclick="togglePwd('signupConfirmPassword',this)" aria-label="Toggle password visibility">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <span class="field-error" id="confirmPassword-error" role="alert"></span>
+          <span class="match-indicator" id="matchIndicator" style="display:none;"></span>
+        </div>
+
+        <!-- Agree Terms -->
+        <div class="form-group">
+          <label class="checkbox-group">
+            <input type="checkbox" id="agreeTerms" required>
+            <span class="custom-checkbox"></span>
+            <span>I agree to the
+              <a href="pages/terms.html" target="_blank" rel="noopener">Terms of Service</a>
+              and
+              <a href="pages/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+            </span>
+          </label>
+          <span class="field-error" id="terms-error" role="alert"></span>
+        </div>
+
+        <div style="display:flex;gap:12px;">
+          <button type="button" class="btn btn-secondary" onclick="goToStep(1)">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <button type="submit" class="btn btn-primary" style="flex:1;" id="step2NextBtn">
+            <span class="btn-text">Review <i class="fas fa-arrow-right"></i></span>
+            <span class="btn-spinner" style="display:none;"><span class="spinner-ring"></span></span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ──────────────────── STEP 3: REVIEW & SUBMIT ──────────────────── -->
+    <div id="signupStep3" style="display:none;">
+      <div class="review-card">
+        <h3 class="review-title"><i class="fas fa-clipboard-check"></i> Review Your Information</h3>
+        <div class="review-grid" id="reviewGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Email Verification Notice -->
+      <div class="verification-notice">
+        <i class="fas fa-envelope"></i>
+        <div>
+          <strong>Email Verification Required</strong>
+          <p>A verification link will be sent to your institutional email. Your account will require admin approval before access is granted.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:20px;">
+        <button type="button" class="btn btn-secondary" onclick="goToStep(2)">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn btn-primary" style="flex:1;" id="signupSubmitBtn" onclick="handleSignupSubmit()">
+          <span class="btn-text"><i class="fas fa-user-plus"></i> Create Account</span>
+          <span class="btn-spinner" style="display:none;"><span class="spinner-ring"></span> Creating…</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sign In Link -->
+    <div class="auth-footer-link" style="margin-top:20px;">
+      Already have an account? <a href="login.html"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+    </div>
+
+    <!-- Privacy & Terms -->
+    <div class="auth-legal">
+      Protected by Acadrix Security. &nbsp;
+      <a href="pages/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+      &amp;
+      <a href="pages/terms.html" target="_blank" rel="noopener">Terms of Service</a>
+    </div>
+
+  </div><!-- /.auth-card -->
+
+
+  <script>
+    /* ── Helpers ── */
+    function $(id) { return document.getElementById(id); }
+
+    function showToast(msg, type = 'info', duration = 4000) {
+      const tc = $('toastContainer') || (() => { const d = document.createElement('div'); d.id = 'toastContainer'; d.className = 'toast-container'; document.body.appendChild(d); return d; })();
+      const iconMap = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+      const t = document.createElement('div');
+      t.className = `toast toast-${type}`;
+      t.innerHTML = `<i class="fas ${iconMap[type] || 'fa-info-circle'}"></i><span>${msg}</span>`;
+      tc.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(100%)'; setTimeout(() => t.remove(), 350); }, duration);
+    }
+
+    function setFieldError(inputId, errId, msg) {
+      const inp = $(inputId), err = $(errId);
+      if (inp) inp.classList.toggle('is-invalid', !!msg);
+      if (err) { err.textContent = msg; err.style.display = msg ? 'block' : 'none'; }
+    }
+    function clearFieldError(inputId, errId) { setFieldError(inputId, errId, ''); }
+
+    function setBtnLoading(btnId, loading) {
+      const btn = $(btnId); if (!btn) return;
+      btn.disabled = loading;
+      const text = btn.querySelector('.btn-text');
+      const spin = btn.querySelector('.btn-spinner');
+      if (text) text.style.display = loading ? 'none' : '';
+      if (spin) spin.style.display = loading ? 'inline-flex' : 'none';
+    }
+
+    function togglePwd(inputId, btn) {
+      const inp = $(inputId);
+      const icon = btn.querySelector('i');
+      const isPass = inp.type === 'password';
+      inp.type = isPass ? 'text' : 'password';
+      icon.className = isPass ? 'fas fa-eye-slash' : 'fas fa-eye';
+      btn.setAttribute('aria-label', isPass ? 'Hide password' : 'Show password');
+    }
+
+    /* ── Strength ── */
+    function checkStrength(input, meterId) {
+      const val = input.value;
+      const bar = $(meterId + 'Bar');
+      const label = $(meterId + 'Label');
+      if (!bar || !label) return;
+      const meter = $(meterId);
+      if (!val) { meter.style.display = 'none'; return; }
+      meter.style.display = 'block';
+      let score = 0;
+      const reqLen   = val.length >= 8;
+      const reqUpper = /[A-Z]/.test(val);
+      const reqNum   = /[0-9]/.test(val);
+      const reqSpec  = /[^A-Za-z0-9]/.test(val);
+      if (reqLen)   score++;
+      if (reqUpper) score++;
+      if (reqNum)   score++;
+      if (reqSpec)  score++;
+      if (val.length >= 12) score++;
+      // Update checklist
+      updateReq('req-length', reqLen);
+      updateReq('req-upper',  reqUpper);
+      updateReq('req-number', reqNum);
+      updateReq('req-special',reqSpec);
+      const levels = [
+        { pct: '20%', color: '#ef4444', text: 'Very Weak' },
+        { pct: '40%', color: '#f97316', text: 'Weak' },
+        { pct: '60%', color: '#f59e0b', text: 'Fair' },
+        { pct: '80%', color: '#10b981', text: 'Strong' },
+        { pct: '100%', color: '#06b6d4', text: 'Very Strong' }
+      ];
+      const lv = levels[Math.min(score, 4)];
+      bar.style.width = lv.pct;
+      bar.style.background = lv.color;
+      label.textContent = lv.text;
+      label.style.color = lv.color;
+    }
+
+    function updateReq(id, met) {
+      const el = $(id); if (!el) return;
+      el.className = met ? 'met' : '';
+      el.querySelector('i').className = met ? 'fas fa-check-circle' : 'fas fa-circle';
+    }
+
+    /* ── Show/hide department ── */
+    $('signupRole').addEventListener('change', () => {
+      $('deptGroup').style.display = $('signupRole').value ? '' : 'none';
+    });
+
+    /* ── Confirm Password Match Indicator ── */
+    $('signupConfirmPassword').addEventListener('input', () => {
+      const p = $('signupPassword').value;
+      const c = $('signupConfirmPassword').value;
+      const ind = $('matchIndicator');
+      if (!c) { ind.style.display = 'none'; return; }
+      ind.style.display = 'block';
+      if (p === c) {
+        ind.innerHTML = '<i class="fas fa-check-circle" style="color:#10b981;"></i> Passwords match';
+        ind.style.color = '#10b981';
+        clearFieldError('signupConfirmPassword', 'confirmPassword-error');
+      } else {
+        ind.innerHTML = '<i class="fas fa-times-circle" style="color:#ef4444;"></i> Passwords do not match';
+        ind.style.color = '#ef4444';
+      }
+    });
+
+    /* ── Email real-time check ── */
+    $('signupEmail').addEventListener('blur', () => {
+      const email = $('signupEmail').value.trim().toLowerCase();
+      const icon = $('emailStatusIcon');
+      if (!email) { icon.innerHTML = ''; return; }
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        icon.innerHTML = '<i class="fas fa-check-circle" style="color:#10b981;"></i>';
+        clearFieldError('signupEmail', 'email-error');
+      } else {
+        icon.innerHTML = '<i class="fas fa-times-circle" style="color:#ef4444;"></i>';
+      }
+    });
+
+    /* ── Steps Navigation ── */
+    function goToStep(n) {
+      ['signupStep1','signupStep2','signupStep3'].forEach((id, i) => {
+        $(id).style.display = (i + 1 === n) ? '' : 'none';
+      });
+      ['step-dot-1','step-dot-2','step-dot-3'].forEach((id, i) => {
+        const el = $(id);
+        el.classList.remove('active', 'done');
+        if (i + 1 === n) el.classList.add('active');
+        if (i + 1 < n)  el.classList.add('done');
+      });
+      $('authCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ── STEP 1 Submit ── */
+    $('step1Form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name  = $('signupName').value.trim();
+      const email = $('signupEmail').value.trim().toLowerCase();
+      const role  = $('signupRole').value;
+      let ok = true;
+
+      if (!name || name.length < 2) { setFieldError('signupName', 'name-error', 'Please enter your full name.'); ok = false; } else clearFieldError('signupName', 'name-error');
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setFieldError('signupEmail', 'email-error', 'Please enter a valid email address.'); ok = false; }
+      else if (!email.endsWith('@college.edu.in')) { setFieldError('signupEmail', 'email-error', 'Email must end with @college.edu.in'); ok = false; }
+      else {
+        // Check duplicate
+        const existing = JSON.parse(localStorage.getItem('edu_custom_users') || '[]');
+        if (existing.find(u => u.email === email)) { setFieldError('signupEmail', 'email-error', 'This email is already registered.'); ok = false; }
+        else clearFieldError('signupEmail', 'email-error');
+      }
+      if (!role) { setFieldError('signupRole', 'role-error', 'Please select your role.'); ok = false; } else clearFieldError('signupRole', 'role-error');
+
+      if (ok) {
+        setBtnLoading('step1NextBtn', true);
+        setTimeout(() => { setBtnLoading('step1NextBtn', false); goToStep(2); }, 600);
+      }
+    });
+
+    /* ── STEP 2 Submit ── */
+    $('step2Form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pwd  = $('signupPassword').value;
+      const cpwd = $('signupConfirmPassword').value;
+      const agree = $('agreeTerms').checked;
+      let ok = true;
+
+      if (!pwd || pwd.length < 8) { setFieldError('signupPassword', 'signupPassword-error', 'Password must be at least 8 characters.'); ok = false; } else clearFieldError('signupPassword', 'signupPassword-error');
+      if (pwd !== cpwd) { setFieldError('signupConfirmPassword', 'confirmPassword-error', 'Passwords do not match.'); ok = false; } else clearFieldError('signupConfirmPassword', 'confirmPassword-error');
+      if (!agree) { setFieldError('agreeTerms', 'terms-error', 'You must agree to the Terms of Service.'); ok = false; } else clearFieldError('agreeTerms', 'terms-error');
+
+      if (ok) {
+        // Populate review
+        const role  = $('signupRole').value;
+        const dept  = $('signupDept').value;
+        const roleLabels = { Student: '🎓 Student', Faculty: '📚 Faculty', Admin: '🛡️ Admin' };
+        $('reviewGrid').innerHTML = `
+          <div class="review-item"><span class="review-key">Full Name</span><span class="review-val">${$('signupName').value.trim()}</span></div>
+          <div class="review-item"><span class="review-key">Email</span><span class="review-val">${$('signupEmail').value.trim()}</span></div>
+          <div class="review-item"><span class="review-key">Role</span><span class="review-val">${roleLabels[role] || role}</span></div>
+          ${dept ? `<div class="review-item"><span class="review-key">Department</span><span class="review-val">${dept}</span></div>` : ''}
+          <div class="review-item"><span class="review-key">Password</span><span class="review-val">••••••••</span></div>
+        `;
+        goToStep(3);
+      }
+    });
+
+    /* ── STEP 3 Final Submit ── */
+    function handleSignupSubmit() {
+      setBtnLoading('signupSubmitBtn', true);
+      const name  = $('signupName').value.trim();
+      const email = $('signupEmail').value.trim().toLowerCase();
+      const pwd   = $('signupPassword').value;
+      const role  = $('signupRole').value;
+      const dept  = $('signupDept').value;
+
+      setTimeout(() => {
+        const users = JSON.parse(localStorage.getItem('edu_custom_users') || '[]');
+        users.push({ name, email, password: pwd, role, department: dept, status: 'pending', createdAt: new Date().toISOString() });
+        localStorage.setItem('edu_custom_users', JSON.stringify(users));
+
+        setBtnLoading('signupSubmitBtn', false);
+
+        // Hide form, show success
+        ['signupStep1','signupStep2','signupStep3'].forEach(id => $(id).style.display = 'none');
+        $('signupSuccess').style.display = 'flex';
+        $('signupSuccessMsg').textContent = `Account created! A verification email has been sent to ${email}. Awaiting admin approval.`;
+
+        setTimeout(() => { window.location.href = 'login.html'; }, 3000);
+      }, 1500);
+    }
+
+    /* ── Initialize ── */
+    goToStep(1);
+  </script>
+
+</body>
+</html>
