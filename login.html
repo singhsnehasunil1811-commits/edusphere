@@ -25,7 +25,7 @@
       <!-- Ultra 3D Logo Component -->
       <div class="custom-logo-container">
         <div class="logo-core">
-          <div class="logo-a">A</div>
+          <div class="logo-a">E</div>
           <div class="orbit-ring ring-1"></div>
           <div class="orbit-ring ring-2"></div>
           <div class="orbit-ring ring-3"></div>
@@ -163,6 +163,13 @@
       </button>
     </form>
 
+    <!-- Alternative Action / Create Account Button -->
+    <div style="margin-top: 14px; text-align: center;">
+      <button type="button" class="btn btn-secondary btn-full" onclick="openModal('signupModal')" style="border: 1px dashed var(--primary-color); color: #c4b5fd; background: rgba(139, 92, 246, 0.1);">
+        <i class="fas fa-user-plus" style="margin-right: 6px;"></i> Create New Account
+      </button>
+    </div>
+
     <!-- Demo Quick Fill -->
     <div class="demo-section">
       <span class="demo-label">Quick Demo Fill:</span>
@@ -179,11 +186,11 @@
       </div>
     </div>
 
-    <!-- Create Account -->
-    <div class="auth-footer-link">
-      Don't have an account?
-      <a href="signup.html" id="createAccountLink">
-        <i class="fas fa-user-plus"></i> Create Account / Request Access
+    <!-- Create Account Footer Notice -->
+    <div class="auth-footer-link" style="margin-top: 20px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+      Don't have an account yet? 
+      <a href="javascript:void(0)" id="createAccountLink" onclick="openModal('signupModal');" style="color: #38bdf8; font-weight: 600; text-decoration: underline; margin-left: 6px;">
+        <i class="fas fa-user-plus"></i> Register / Create Account
       </a>
     </div>
 
@@ -335,6 +342,177 @@
         <button class="btn btn-secondary" onclick="closeModal('approvalModal')">Close</button>
         <button class="btn btn-primary" onclick="resendVerification()">
           <i class="fas fa-redo"></i> Resend Verification
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════
+       CREATE ACCOUNT / SIGNUP MODAL
+  ════════════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="signupModal" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+    <div class="modal" style="max-width:520px;max-height:90vh;overflow-y:auto;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="signupTitle">
+          <i class="fas fa-user-plus" style="color:var(--primary-color);margin-right:8px;"></i>Create Account
+        </h2>
+        <button class="modal-close" onclick="closeModal('signupModal')" aria-label="Close modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-desc" style="margin-bottom:16px;">Join <strong>EDUSPHERE APSIT INTELLIGENCE PLATFORM</strong>. Fill in your details below.</p>
+
+        <form id="signupForm" novalidate autocomplete="off">
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-label" for="signupName">Full Name <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-user"></i>
+              <input type="text" class="form-control" id="signupName" placeholder="e.g. Sneha Singh" required>
+            </div>
+            <span class="field-error" id="signupName-error" role="alert"></span>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="signupEmail">Email Address <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-envelope"></i>
+              <input type="email" class="form-control" id="signupEmail" placeholder="e.g. name@college.edu" required>
+            </div>
+            <span class="field-error" id="signupEmail-error" role="alert"></span>
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group">
+            <label class="form-label" for="signupPhone">Phone Number</label>
+            <div class="input-icon-group">
+              <i class="fas fa-phone"></i>
+              <input type="tel" class="form-control" id="signupPhone" placeholder="e.g. 9876543210">
+            </div>
+          </div>
+
+          <!-- Gender -->
+          <div class="form-group">
+            <label class="form-label" for="signupGender">Gender <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-venus-mars"></i>
+              <select class="form-control" id="signupGender" required>
+                <option value="">— Select —</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <span class="field-error" id="signupGender-error" role="alert"></span>
+          </div>
+
+          <!-- Role -->
+          <div class="form-group">
+            <label class="form-label" for="signupRole">I am a <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-id-badge"></i>
+              <select class="form-control" id="signupRole" required>
+                <option value="">— Select Role —</option>
+                <option value="Student">Student</option>
+                <option value="Faculty">Faculty</option>
+              </select>
+            </div>
+            <span class="field-error" id="signupRole-error" role="alert"></span>
+          </div>
+
+          <!-- Department -->
+          <div class="form-group">
+            <label class="form-label" for="signupDept">Department <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-building"></i>
+              <select class="form-control" id="signupDept" required>
+                <option value="">— Select Department —</option>
+                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics & Telecommunication">Electronics & Telecommunication</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="AI & Data Science">AI & Data Science</option>
+                <option value="Computer Science & Design">Computer Science & Design</option>
+              </select>
+            </div>
+            <span class="field-error" id="signupDept-error" role="alert"></span>
+          </div>
+
+          <!-- Student-only fields -->
+          <div id="studentFields" style="display:none;">
+            <!-- Semester -->
+            <div class="form-group">
+              <label class="form-label" for="signupSemester">Semester</label>
+              <div class="input-icon-group">
+                <i class="fas fa-layer-group"></i>
+                <select class="form-control" id="signupSemester">
+                  <option value="">— Select —</option>
+                  <option value="1">Semester 1</option>
+                  <option value="2">Semester 2</option>
+                  <option value="3">Semester 3</option>
+                  <option value="4">Semester 4</option>
+                  <option value="5">Semester 5</option>
+                  <option value="6">Semester 6</option>
+                  <option value="7">Semester 7</option>
+                  <option value="8">Semester 8</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Roll Number -->
+            <div class="form-group">
+              <label class="form-label" for="signupRoll">Roll Number</label>
+              <div class="input-icon-group">
+                <i class="fas fa-hashtag"></i>
+                <input type="text" class="form-control" id="signupRoll" placeholder="e.g. CS2024001">
+              </div>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label" for="signupPassword">Password <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" class="form-control" id="signupPassword" placeholder="Min. 8 characters" oninput="checkStrength(this,'signupStrength')" required>
+              <button type="button" class="pwd-toggle-btn" onclick="togglePwd('signupPassword',this)" aria-label="Toggle password visibility">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="strength-meter" id="signupStrength" style="display:none;">
+              <div class="strength-bar-track">
+                <div class="strength-bar-fill" id="signupStrengthBar"></div>
+              </div>
+              <span class="strength-label" id="signupStrengthLabel"></span>
+            </div>
+            <span class="field-error" id="signupPassword-error" role="alert"></span>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label class="form-label" for="signupConfirm">Confirm Password <span class="required">*</span></label>
+            <div class="input-icon-group">
+              <i class="fas fa-lock-open"></i>
+              <input type="password" class="form-control" id="signupConfirm" placeholder="Re-enter password" required>
+              <button type="button" class="pwd-toggle-btn" onclick="togglePwd('signupConfirm',this)" aria-label="Toggle password visibility">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <span class="field-error" id="signupConfirm-error" role="alert"></span>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('signupModal')">Cancel</button>
+        <button class="btn btn-primary" id="signupSubmitBtn" onclick="handleSignup()">
+          <span class="btn-text"><i class="fas fa-user-plus"></i> Create Account</span>
+          <span class="btn-spinner" style="display:none;"><span class="spinner-ring"></span> Creating…</span>
         </button>
       </div>
     </div>
@@ -652,6 +830,171 @@
     document.querySelectorAll('.modal-backdrop').forEach(bd => {
       bd.addEventListener('click', (e) => { if (e.target === bd) bd.classList.remove('active'); });
     });
+
+    /* ══════════════════════════════════════════════════════
+       SIGNUP / CREATE ACCOUNT LOGIC
+    ══════════════════════════════════════════════════════ */
+
+    /* Toggle student-specific fields when role changes */
+    const signupRoleSel = $('signupRole');
+    if (signupRoleSel) {
+      signupRoleSel.addEventListener('change', () => {
+        const sf = $('studentFields');
+        if (sf) sf.style.display = signupRoleSel.value === 'Student' ? '' : 'none';
+      });
+    }
+
+    function handleSignup() {
+      const name     = ($('signupName')     || {}).value?.trim();
+      const email    = ($('signupEmail')    || {}).value?.trim();
+      const phone    = ($('signupPhone')    || {}).value?.trim();
+      const gender   = ($('signupGender')   || {}).value;
+      const role     = ($('signupRole')     || {}).value;
+      const dept     = ($('signupDept')     || {}).value;
+      const semester = ($('signupSemester') || {}).value;
+      const roll     = ($('signupRoll')     || {}).value?.trim();
+      const password = ($('signupPassword') || {}).value;
+      const confirm  = ($('signupConfirm')  || {}).value;
+
+      /* ── Validate ── */
+      let ok = true;
+
+      if (!name || name.length < 2) {
+        setFieldError('signupName', 'signupName-error', 'Please enter your full name.'); ok = false;
+      } else { clearFieldError('signupName', 'signupName-error'); }
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setFieldError('signupEmail', 'signupEmail-error', 'Please enter a valid email address.'); ok = false;
+      } else { clearFieldError('signupEmail', 'signupEmail-error'); }
+
+      if (!gender) {
+        setFieldError('signupGender', 'signupGender-error', 'Please select your gender.'); ok = false;
+      } else { clearFieldError('signupGender', 'signupGender-error'); }
+
+      if (!role) {
+        setFieldError('signupRole', 'signupRole-error', 'Please select your role.'); ok = false;
+      } else { clearFieldError('signupRole', 'signupRole-error'); }
+
+      if (!dept) {
+        setFieldError('signupDept', 'signupDept-error', 'Please select your department.'); ok = false;
+      } else { clearFieldError('signupDept', 'signupDept-error'); }
+
+      if (!password || password.length < 8) {
+        setFieldError('signupPassword', 'signupPassword-error', 'Password must be at least 8 characters.'); ok = false;
+      } else { clearFieldError('signupPassword', 'signupPassword-error'); }
+
+      if (password !== confirm) {
+        setFieldError('signupConfirm', 'signupConfirm-error', 'Passwords do not match.'); ok = false;
+      } else { clearFieldError('signupConfirm', 'signupConfirm-error'); }
+
+      if (!ok) return;
+
+      /* ── Check duplicate ── */
+      const customUsers = JSON.parse(localStorage.getItem('edu_custom_users') || '[]');
+      const allCreds = (auth && auth._credentials) ? auth._credentials : [];
+      const emailLow = email.toLowerCase();
+      const dup = allCreds.find(c => c.email.toLowerCase() === emailLow) ||
+                  customUsers.find(c => c.email.toLowerCase() === emailLow);
+      if (dup) {
+        setFieldError('signupEmail', 'signupEmail-error', 'This email is already registered. Please sign in instead.');
+        return;
+      }
+
+      setBtnLoading('signupSubmitBtn', true);
+
+      /* Simulate creation delay */
+      setTimeout(() => {
+        /* ── Generate IDs ── */
+        const deptCodeMap = {
+          'Computer Science & Engineering': 'CS', 'Information Technology': 'IT',
+          'Electronics & Telecommunication': 'EXTC', 'Mechanical Engineering': 'ME',
+          'Civil Engineering': 'CE', 'AI & Data Science': 'AIDS', 'Computer Science & Design': 'CSD'
+        };
+        const deptCode = deptCodeMap[dept] || 'GEN';
+        const nextNum = customUsers.filter(u => u.role === role).length + 1;
+        const studentId = role === 'Student' ? `STU-${deptCode}-${String(2000 + nextNum).slice(-4)}` : undefined;
+        const semVal = role === 'Student' ? parseInt(semester) || 1 : undefined;
+        const yearMap = { 1: '1st Year', 2: '1st Year', 3: '2nd Year', 4: '2nd Year', 5: '3rd Year', 6: '3rd Year', 7: '4th Year', 8: '4th Year' };
+        const yearVal = semVal ? (yearMap[semVal] || '1st Year') : undefined;
+
+        /* ── Save to auth credentials (custom users) ── */
+        const newUser = {
+          username: email,
+          email: email,
+          password: password,
+          role: role,
+          name: name,
+          status: 'approved',
+          phone: phone || '',
+          gender: gender,
+          department: dept,
+          studentId: studentId,
+          rollNumber: roll || studentId,
+          semester: semVal,
+          year: yearVal,
+          createdAt: new Date().toISOString()
+        };
+        customUsers.push(newUser);
+        localStorage.setItem('edu_custom_users', JSON.stringify(customUsers));
+
+        /* ── Also add to the data stores so the profile appears in Students / Faculty pages ── */
+        if (role === 'Student') {
+          const students = JSON.parse(localStorage.getItem('edu_students') || '[]');
+          students.push({
+            id: students.length + 200,
+            studentId: studentId,
+            name: name,
+            email: email,
+            phone: phone || '',
+            gender: gender,
+            department: dept,
+            semester: semVal,
+            year: yearVal,
+            rollNumber: roll || studentId,
+            gpa: 0,
+            status: 'Active',
+            enrollmentDate: new Date().toISOString().split('T')[0],
+            address: '',
+            avatar: null
+          });
+          localStorage.setItem('edu_students', JSON.stringify(students));
+        } else if (role === 'Faculty') {
+          const faculty = JSON.parse(localStorage.getItem('edu_faculty') || '[]');
+          faculty.push({
+            id: faculty.length + 200,
+            name: name,
+            email: email,
+            phone: phone || '',
+            gender: gender,
+            department: dept,
+            designation: 'Assistant Professor',
+            qualification: '',
+            status: 'Active',
+            joinDate: new Date().toISOString().split('T')[0]
+          });
+          localStorage.setItem('edu_faculty', JSON.stringify(faculty));
+        }
+
+        setBtnLoading('signupSubmitBtn', false);
+        closeModal('signupModal');
+
+        /* ── Auto-fill login form with new credentials ── */
+        $('loginUsername').value = email;
+        $('loginPassword').value = password;
+        const roleTab = document.querySelector(`.role-tab[data-role="${role}"]`);
+        if (roleTab) roleTab.click();
+        clearFieldError('loginUsername', 'username-error');
+        clearFieldError('loginPassword', 'password-error');
+
+        showToast(`Account created successfully! You can now sign in as ${role}.`, 'success', 5000);
+
+        /* Reset signup form */
+        const sf = $('signupForm');
+        if (sf) sf.reset();
+        const stf = $('studentFields');
+        if (stf) stf.style.display = 'none';
+      }, 1200);
+    }
   </script>
 
 </body>

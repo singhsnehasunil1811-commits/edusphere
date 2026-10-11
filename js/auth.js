@@ -1,5 +1,5 @@
 /*
-  auth.js — Acadrix Authentication & Session Manager
+  auth.js — EduSphere Authentication & Session Manager
   Supports: Admin, Faculty, Student roles
   Features: Login, Logout, Remember Me, Approval Status, Email Verification
 */
